@@ -14,17 +14,21 @@ class AuthController2 extends Controller
     {
         $request->validate([
             'name'     => 'required|string',
+            'subname'  => 'required|string',
             'email'    => 'required|string|email|unique:users',
             'password' => 'required|string',
         ]);
         $user = new User([
             'name'     => $request->name,
+            'subname'  => $request->subname,
             'email'    => $request->email,
             'password' => bcrypt($request->password),
         ]);
         $user->save();
         return response()->json([
-            'message' => 'Successfully created user!'], 201);
+            'message' => 'Creacion satisfactoria',
+            'code' => '201'
+        ], 201);
     }
     
     public function login2(Request $request)
@@ -65,10 +69,19 @@ class AuthController2 extends Controller
             //return response(['message' => 'Login incorrecto. Revise las credenciales.'], 400);
             return response()->json(['message' => 'Login incorrecto. Revise las credenciales.', 'code' => 400], 400);
         }
-
+        $user = auth()->user();
         $accessToken = auth()->user()->createToken('authToken')->accessToken;
 
         //return response(['user' => auth()->user(), 'access_token' => $accessToken]);
-        return response()->json(['message' => ['user' => auth()->user(), 'access_token' => $accessToken], 'code' => 200], 200);
-    }
+//        return response()->json(['message' => ['user' => auth()->user(), 'access_token' => $accessToken], 'code' => 200], 200);
+        
+        return response()->json([
+            'message' => 'Login correcto',
+            'name' => $user->name,
+            'subname' => '',
+            'mail' => $user->email,
+            'access_token' => $accessToken,
+            'code' => 200,
+        ], 200);
+        }
 }
