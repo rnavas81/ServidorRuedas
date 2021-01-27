@@ -67,7 +67,7 @@ class AuthController2 extends Controller
 
         if (!auth()->attempt($loginData)) {
             //return response(['message' => 'Login incorrecto. Revise las credenciales.'], 400);
-            return response()->json(['message' => 'Login incorrecto. Revise las credenciales.', 'code' => 400], 400);
+            return response()->json(['message' => 'Login incorrecto. Revise las credenciales.'], 400);
         }
         $user = auth()->user();
         $accessToken = auth()->user()->createToken('authToken')->accessToken;
@@ -77,11 +77,11 @@ class AuthController2 extends Controller
         
         return response()->json([
             'message' => 'Login correcto',
+            'id' => $user->id,
             'name' => $user->name,
-            'subname' => '',
+            'subname' => $user->subname,
             'mail' => $user->email,
-            'access_token' => $accessToken,
-            'code' => 200,
+            'access_token' => $accessToken
         ], 200);
         }
 }
