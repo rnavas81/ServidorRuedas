@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\api\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,8 +33,8 @@ Route::get('/usuario/estado',[Usuarios::class,'comprobarEstado']);
 Route::get('/rueda',[Ruedas::class,'getRueda']);
 Route::get('/rueda/{id}',[Ruedas::class,'getRueda']);
 
+Route::post('sigup','AuthController@signup');
+Route::post('login','AuthController@login');
 
-//Rutas solo para usuarios registrados
-Route::group(['middleware'=>['auth:api']],function () {
-
-});
+Route::post('/signup', [App\Http\Controllers\Auth\AuthController2::class, 'signup'])->name('signup');
+Route::post('/login', [App\Http\Controllers\Auth\AuthController2::class, 'login'])->name('login');
