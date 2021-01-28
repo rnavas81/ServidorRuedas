@@ -28,7 +28,7 @@ Route::get('/test',function (Request $params){
 });
 //Ruedas
 Route::post('/usuario/unirse',[Usuarios::class,'unirseRueda']);
-Route::get('/usuario/estado',[Usuarios::class,'comprobarEstado']);
+Route::post('/usuario/estado',[Usuarios::class,'comprobarEstado']);
 //Usuario
 Route::get('/rueda',[Ruedas::class,'getRueda']);
 Route::get('/rueda/{id}',[Ruedas::class,'getRueda']);

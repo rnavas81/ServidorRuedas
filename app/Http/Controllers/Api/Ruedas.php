@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\rueda;
+use App\Models\Rueda;
 use App\Models\Rueda_viaje;
 use Illuminate\Http\Request;
 
