@@ -14,13 +14,13 @@ class AuthController2 extends Controller
     {
         $request->validate([
             'name'     => 'required|string',
-            'subname'  => 'required|string',
+            'surname'  => 'required|string',
             'email'    => 'required|string|email|unique:users',
             'password' => 'required|string',
         ]);
         $user = new User([
             'name'     => $request->name,
-            'subname'  => $request->subname,
+            'surname'  => $request->surname,
             'email'    => $request->email,
             'password' => bcrypt($request->password),
         ]);
@@ -30,7 +30,7 @@ class AuthController2 extends Controller
             'code' => '201'
         ], 201);
     }
-    
+
     public function login2(Request $request)
     {
         $request->validate([
@@ -58,7 +58,7 @@ class AuthController2 extends Controller
                     ->toDateTimeString(),
         ]);
     }
-    
+
     public function login(Request $request){
         $loginData = $request->validate([
             'email' => 'email|required',
@@ -74,12 +74,12 @@ class AuthController2 extends Controller
 
         //return response(['user' => auth()->user(), 'access_token' => $accessToken]);
 //        return response()->json(['message' => ['user' => auth()->user(), 'access_token' => $accessToken], 'code' => 200], 200);
-        
+
         return response()->json([
             'message' => 'Login correcto',
             'id' => $user->id,
             'name' => $user->name,
-            'subname' => $user->subname,
+            'surname' => $user->surname,
             'mail' => $user->email,
             'access_token' => $accessToken
         ], 200);
