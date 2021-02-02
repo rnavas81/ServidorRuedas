@@ -39,6 +39,7 @@ class Usuarios extends Controller
             }
         }
 
+        app('App\Http\Controllers\Ruedas')->generateRueda($id);
         return response()->json([
             'message' => 'Ok',
         ], 201);
@@ -46,7 +47,7 @@ class Usuarios extends Controller
 
     public function comprobarEstado(Request $params){
         $id = $params->get('idUser');
-        $user = User::with('ruedas')->where("id","=",$id)->first();
+        $user = User::with('ruedas')->where("id",$id)->first();
 //        dd(count($user->ruedas));
         return response()->json([
             'registered'=>count($user->ruedas)>0
