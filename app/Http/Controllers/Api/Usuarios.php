@@ -39,6 +39,7 @@ class Usuarios extends Controller
             }
         }
 
+        app('App\Http\Controllers\Ruedas')->generateRueda($id);
         return response()->json([
             'message' => 'Ok',
         ], 201);

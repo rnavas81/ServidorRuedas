@@ -18,4 +18,7 @@ class Rueda_viajes_usuario extends Model
         'created_at',
         'updated_at'
     ];
+    public function usuario(){
+        return $this->hasOne('App\Models\User','id','id_usuario');
+    }
 }

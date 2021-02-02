@@ -32,6 +32,8 @@ Route::post('/usuario/estado',[Usuarios::class,'comprobarEstado']);
 //Usuario
 Route::get('/rueda',[Ruedas::class,'getRueda']);
 Route::get('/rueda/{id}',[Ruedas::class,'getRueda']);
+Route::get('/rueda/generar',[Ruedas::class,'generateRueda']);
+Route::get('/rueda/generar/{id}',[Ruedas::class,'generateRueda']);
 
 Route::post('sigup','AuthController@signup');
 Route::post('login','AuthController@login');
