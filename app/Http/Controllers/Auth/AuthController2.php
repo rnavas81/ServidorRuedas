@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Carbon\Carbon;
-use Mail;
+use App\Mail\RecuperarContraseña;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController2 extends Controller
 {
@@ -92,19 +93,25 @@ class AuthController2 extends Controller
         ]);
         
        
-        $user = User::where('email',$data['email'])->get();
-        if (count($user) > 0) {
+        $user = User::where('email',$data['email'])->first();
+        if ($user != null) {
             $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $pass = substr(str_shuffle($permitted_chars), 0, 10);
-               
-            dd($pass);
-            $user->password = $pass;
+            
+            Mail::to($data['email'])->send(new RecuperarContraseña($pass));
+            if (Mail::failures()) {
+                echo 'error';
+            } else {
+               echo 'funciona';
+            }
+            
+            $user->password = bcrypt($pass);
             $user->save();
         }else{
             echo 'no se encuentra';
         }
-        $pass = null;
-        User::where('email','jorgeolmo.I@gmail.com')->update(['email' => 'jorgeolmo.I@gmail.com']);;
+//        $pass = null;
+//        User::where('email','jorgeolmo.I@gmail.com')->update(['email' => 'jorgeolmo.I@gmail.com']);;
         
     }
 }

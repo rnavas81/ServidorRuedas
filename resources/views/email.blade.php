@@ -11,5 +11,6 @@
     </head>
     <body>
         <h1>SU CONTRASEÑA HA SIDO CAMBIADA</h1>
+        <h2>{{ $password }}</h2>
     </body>
 </html>
