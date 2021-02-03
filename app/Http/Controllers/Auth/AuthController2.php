@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Carbon\Carbon;
+use Mail;
 
 class AuthController2 extends Controller
 {
@@ -83,5 +84,27 @@ class AuthController2 extends Controller
             'mail' => $user->email,
             'access_token' => $accessToken
         ], 200);
+    }
+    
+    public function forget(Request $request) {
+        $data = $request->validate([
+            'email' => 'email|required'
+        ]);
+        
+       
+        $user = User::where('email',$data['email'])->get();
+        if (count($user) > 0) {
+            $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $pass = substr(str_shuffle($permitted_chars), 0, 10);
+               
+            dd($pass);
+            $user->password = $pass;
+            $user->save();
+        }else{
+            echo 'no se encuentra';
         }
+        $pass = null;
+        User::where('email','jorgeolmo.I@gmail.com')->update(['email' => 'jorgeolmo.I@gmail.com']);;
+        
+    }
 }

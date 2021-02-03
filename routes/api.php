@@ -33,8 +33,7 @@ Route::post('/usuario/estado',[Usuarios::class,'comprobarEstado']);
 Route::get('/rueda',[Ruedas::class,'getRueda']);
 Route::get('/rueda/{id}',[Ruedas::class,'getRueda']);
 
-Route::post('sigup','AuthController@signup');
-Route::post('login','AuthController@login');
 
 Route::post('/signup', [App\Http\Controllers\Auth\AuthController2::class, 'signup'])->name('signup');
 Route::post('/login', [App\Http\Controllers\Auth\AuthController2::class, 'login'])->name('login');
+Route::post('/forget', [App\Http\Controllers\Auth\AuthController2::class, 'forget'])->name('forget');
