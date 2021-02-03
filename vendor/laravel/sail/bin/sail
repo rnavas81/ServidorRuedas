@@ -133,6 +133,21 @@ if [ $# -gt 0 ]; then
             sail_is_not_running
         fi
 
+    # Proxy the "dusk:fails" command to the "php artisan dusk:fails" Artisan command...
+    elif [ "$1" == "dusk:fails" ]; then
+        shift 1
+
+        if [ "$EXEC" == "yes" ]; then
+            docker-compose exec \
+                -u sail \
+                -e "APP_URL=http://laravel.test" \
+                -e "DUSK_DRIVER_URL=http://selenium:4444/wd/hub" \
+                "$APP_SERVICE" \
+                php artisan dusk:fails "$@"
+        else
+            sail_is_not_running
+        fi
+
     # Initiate a Laravel Tinker session within the application container...
     elif [ "$1" == "tinker" ] ; then
         shift 1
@@ -205,7 +220,7 @@ if [ $# -gt 0 ]; then
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
                 mysql \
-                bash -c 'MYSQL_PWD=${MYSQL_ROOT_PASSWORD} mysql -u ${MYSQL_USER} ${MYSQL_DATABASE}'
+                bash -c 'MYSQL_PWD=${MYSQL_PASSWORD} mysql -u ${MYSQL_USER} ${MYSQL_DATABASE}'
         else
             sail_is_not_running
         fi

@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace Lcobucci\JWT\Token;
 
 use DateTimeInterface;
-use Lcobucci\JWT\Token as TokenInterface;
+use Lcobucci\JWT\UnencryptedToken;
 
 use function in_array;
 
-final class Plain implements TokenInterface
+final class Plain implements UnencryptedToken
 {
     private DataSet $headers;
     private DataSet $claims;
@@ -80,7 +80,7 @@ final class Plain implements TokenInterface
             return false;
         }
 
-        return $now > $this->claims->get(RegisteredClaims::EXPIRATION_TIME);
+        return $now >= $this->claims->get(RegisteredClaims::EXPIRATION_TIME);
     }
 
     public function toString(): string

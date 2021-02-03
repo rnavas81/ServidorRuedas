@@ -29,4 +29,8 @@ class Rueda extends Model
     public function viajes(){
         return $this->hasMany('App\Models\Rueda_viaje','idRueda','id');
     }
+    
+    public function generada() {
+        return $this->hasMany('App\Models\RuedaGenerada','idRueda','id');
+    }
 }

@@ -3,12 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/app/Models/User.php</file>
-            <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/app/Http/Controllers/Auth/AuthController2.php</file>
-            <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/routes/api.php</file>
-            <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/app/Http/Controllers/api/AuthController.php</file>
-            <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/database/migrations/2014_10_12_000000_create_users_table.php</file>
-            <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/.env</file>
+            <file>file:/var/www/html/Desafio3/Servidor/app/Models/Rueda.php</file>
+            <file>file:/var/www/html/Desafio3/Servidor/database/migrations/2021_01_28_105918_create_ruedas_table.php</file>
+            <file>file:/var/www/html/Desafio3/Servidor/database/migrations/2021_01_28_105844_create_rueda_generadas_table.php</file>
+            <file>file:/var/www/html/Desafio3/Servidor/app/Http/Controllers/Api/Ruedas.php</file>
+            <file>file:/var/www/html/Desafio3/Servidor/routes/api.php</file>
+            <file>file:/var/www/html/Desafio3/Servidor/app/Models/RuedaGenerada.php</file>
+            <file>file:/var/www/html/Desafio3/Servidor/app/Models/Rueda_viaje.php</file>
         </group>
     </open-files>
 </project-private>

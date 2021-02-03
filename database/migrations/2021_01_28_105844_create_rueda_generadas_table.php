@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRuedasViajesUsersTable extends Migration
+class CreateRuedaGeneradasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateRuedasViajesUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('ruedas_viajes_users', function (Blueprint $table) {
+        Schema::create('rueda_generadas', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->integer("id_rueda_viaje");
-            $table->integer("id_usuario");
-            $table->string("reglas");
+            $table->integer("idRueda");
+            $table->integer("dia");
+            $table->string("hora");
+            $table->integer("tipo");
+            $table->string("coches");
         });
     }
 
@@ -29,6 +30,6 @@ class CreateRuedasViajesUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ruedas_viajes_users');
+        Schema::dropIfExists('rueda_generadas');
     }
 }
