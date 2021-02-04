@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Rueda;
 use App\Models\Rueda_viajes_usuario;
 use App\Models\RuedaGenerada;

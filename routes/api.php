@@ -15,7 +15,7 @@ use App\Http\Controllers\api\AuthController;
 |
 */
 use App\Http\Controllers\Api\Usuarios;
-use \App\Http\Controllers\Ruedas;
+use \App\Http\Controllers\Api\Ruedas;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
