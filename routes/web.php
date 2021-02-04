@@ -14,5 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('email');
+});
+
+Route::get('mail', function () {
+    return view('email');
 });
