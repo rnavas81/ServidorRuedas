@@ -7,14 +7,9 @@ use App\Models\Rueda_viajes_usuario;
 use App\Models\RuedaGenerada;
 
 class Ruedas extends Controller {
-
-class Ruedas extends Controller
-{
     /*
      * Devuelve una rueda básica
      */
-
-    public function getRueda($id = null) {
     public function getRueda($id = null)
     {
 //        if(isset($id)){
