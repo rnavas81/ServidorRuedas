@@ -1,4 +1,6 @@
 .env
-/node_modules
-/nbproject/private/
+
+/nbproject/
+/node_modules/
 /vendor/
+
