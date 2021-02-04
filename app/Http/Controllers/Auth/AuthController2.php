@@ -91,8 +91,8 @@ class AuthController2 extends Controller
         $data = $request->validate([
             'email' => 'email|required'
         ]);
-        
        
+        
         $user = User::where('email',$data['email'])->first();
         if ($user != null) {
             $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -100,18 +100,24 @@ class AuthController2 extends Controller
             
             Mail::to($data['email'])->send(new RecuperarContraseña($pass));
             if (Mail::failures()) {
-                echo 'error';
+                return response()->json([
+                'message' => 'Compruebe su correo electronico'
+            ], 200);
             } else {
-               echo 'funciona';
+               return response()->json([
+                'message' => 'Error del sistema'
+            ], 500);
             }
             
             $user->password = bcrypt($pass);
             $user->save();
+            
+            
         }else{
-            echo 'no se encuentra';
+            return response()->json([
+                'message' => 'Compruebe su correo electronico'
+            ], 200);
         }
-//        $pass = null;
-//        User::where('email','jorgeolmo.I@gmail.com')->update(['email' => 'jorgeolmo.I@gmail.com']);;
-        
     }
+    
 }
