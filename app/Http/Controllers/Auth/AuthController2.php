@@ -97,6 +97,8 @@ class AuthController2 extends Controller
         if ($user != null) {
             $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $pass = substr(str_shuffle($permitted_chars), 0, 10);
+            $user->password = bcrypt($pass);
+            $user->save();
             
             Mail::to($data['email'])->send(new RecuperarContraseña($pass));
             if (Mail::failures()) {
