@@ -1,6 +1,8 @@
+# docker-compose.yml
 # @author Rodrigo Navas
+# Este documento contiene los datos para generar los contenedores necesarios
+# el servicio de backend de la aplicación web Car Share
 version: "3.8"
-
 services:
   # # Crea un proxy inverso
   serverproxy-rueda:
@@ -9,8 +11,9 @@ services:
     # Nombre asignado al contenedor
     container_name: serverproxy-rueda
     # Puertos abiertos para acceder al contenedor
+    # Asigno el 81 para que no haya conflictos con el ciente
     ports:
-      - 80:80
+      - 81:80
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
@@ -46,15 +49,20 @@ services:
     # Variable de entorno para el contendor
     environment:
       # Esta ruta debe estar incluida en el fichero hosts del anfitrión
-      - VIRTUAL_HOST=server-ruedas.com
+      VIRTUAL_HOST: server-ruedas.com
     networks:
         - desafio3-servidor
     # Para la versión de desarrollo se mapea la carpeta con una local
     volumes:
         - .:/var/www/html/
+        - ./logs:/var/log
     depends_on:
         - rueda-db
         - serverproxy-rueda
+    restart: on-failure
+    # command: bash -c "cp .env.example .env"
+    # command: bash -c "composer require"
+    command: bash -c "sh /var/www/html/docker-entrypoint.sh"
 
 networks:
     desafio3-servidor:
