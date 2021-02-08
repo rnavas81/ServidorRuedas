@@ -15,7 +15,7 @@ class CreateRuedaGeneradasTable extends Migration
     {
         Schema::create('rueda_generadas', function (Blueprint $table) {
             $table->id();
-            $table->integer("idRueda");
+            $table->integer("id_rueda");
             $table->tinyInteger("dia");
             $table->string("hora");
             $table->tinyInteger("tipo");

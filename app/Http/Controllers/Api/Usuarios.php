@@ -27,7 +27,7 @@ class Usuarios extends Controller
         $idRueda = $params->get("idRueda");
         $horario = $params->get("horario");
         // Borra los posibles viajes del usuario para esa rueda
-        \DB::select("DELETE FROM ruedas_viajes_users WHERE id_usuario='".$idUsuario."' AND id_rueda_viaje IN (SELECT id FROM ruedas_viajes WHERE ruedas_viajes.idRueda='".$idRueda."')");
+        \DB::select("DELETE FROM ruedas_viajes_users WHERE id_usuario='".$idUsuario."' AND id_rueda_viaje IN (SELECT id FROM ruedas_viajes WHERE ruedas_viajes.id_rueda='".$idRueda."')");
         // Agrega los viajes
         foreach ($horario as $item) {
             foreach ($item as $id){

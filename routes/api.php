@@ -20,8 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // Rutas Publicas
 //Ruta de prueba
 Route::get('/test',function (Request $params){
-    $users = \App\Models\User::all();
-    dd($users);
+    return true;
 });
 //Ruedas
 Route::post('/usuario/unirse',[App\Http\Controllers\Api\Usuarios::class,'unirseRueda']);
@@ -37,5 +36,5 @@ Route::post('/signup', [App\Http\Controllers\Auth\AuthController2::class, 'signu
 Route::post('/login', [App\Http\Controllers\Auth\AuthController2::class, 'login'])->name('login');
 Route::post('/forget', [App\Http\Controllers\Auth\AuthController2::class, 'forget'])->name('forget');
 
-Route::get('/rueda/generada/{id}', [Ruedas::class, 'getRuedaGenerada']);
-Route::get('/rueda/generada', [Ruedas::class, 'getRuedaGenerada']);
+Route::get('/rueda/generada/{id}', [App\Http\Controllers\Api\Ruedas::class, 'getRuedaGenerada']);
+Route::get('/rueda/generada', [App\Http\Controllers\Api\Ruedas::class, 'getRuedaGenerada']);
