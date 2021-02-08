@@ -32,5 +32,10 @@ Route::get('/rueda/{id}',[App\Http\Controllers\Api\Ruedas::class,'getRueda']);
 Route::get('/rueda/generar',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
 Route::get('/rueda/generar/{id}',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
 
+
 Route::post('/signup', [App\Http\Controllers\Auth\AuthController2::class, 'signup'])->name('signup');
 Route::post('/login', [App\Http\Controllers\Auth\AuthController2::class, 'login'])->name('login');
+Route::post('/forget', [App\Http\Controllers\Auth\AuthController2::class, 'forget'])->name('forget');
+
+Route::get('/rueda/generada/{id}', [Ruedas::class, 'getRuedaGenerada']);
+Route::get('/rueda/generada', [Ruedas::class, 'getRuedaGenerada']);

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Mail\RecuperarContraseña;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController2 extends Controller
 {
@@ -83,5 +85,37 @@ class AuthController2 extends Controller
             'mail' => $user->email,
             'access_token' => $accessToken
         ], 200);
+    }
+    
+    public function forget(Request $request) {
+        $data = $request->validate([
+            'email' => 'email|required'
+        ]);
+       
+        
+        $user = User::where('email',$data['email'])->first();
+        if ($user != null) {
+            $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $pass = substr(str_shuffle($permitted_chars), 0, 10);
+            $user->password = bcrypt($pass);
+            $user->save();
+            
+            Mail::to($data['email'])->send(new RecuperarContraseña($pass));
+            if (!Mail::failures()) {
+                return response()->json([
+                'message' => 'Compruebe su correo electronico'
+            ], 200);
+            } else {
+               return response()->json([
+                'message' => 'Error del sistema'
+            ], 500);
+            }            
+            
+        }else{
+            return response()->json([
+                'message' => 'Compruebe su correo electronico'
+            ], 200);
         }
+    }
+    
 }

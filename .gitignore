@@ -1,6 +1,8 @@
 .env
 /node_modules
 /nbproject
-nbproject
-/vendor
-vendor
+
+/nbproject/
+/node_modules/
+/vendor/
+.DS_STORE

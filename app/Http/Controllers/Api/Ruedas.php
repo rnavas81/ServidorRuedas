@@ -7,9 +7,7 @@ use App\Models\Rueda;
 use App\Models\Rueda_viajes_usuario;
 use App\Models\RuedaGenerada;
 
-
-class Ruedas extends Controller
-{
+class Ruedas extends Controller {
     /*
      * Devuelve una rueda básica
      */
@@ -23,7 +21,22 @@ class Ruedas extends Controller
         return $rueda;
 
         return response()->json($rueda, 200);
+    }
 
+    public function getRuedaGenerada($id = null) {
+        $rueda = Rueda::with(["generada" => function($result) {
+                        $result->orderBy("tipo", 'asc')
+                        ->orderBy("dia", 'asc')
+                        ->orderBy("hora", 'asc');
+                    }])
+                ->first();
+
+        foreach ($rueda->generada as $i => $viaje) {
+            $tmp = json_decode($rueda->generada[$i]->coches);
+            $rueda->generada[$i]->coches = $tmp;
+        }
+
+        return response()->json($rueda, 200);
     }
 
     public function generateRueda($id = null)
