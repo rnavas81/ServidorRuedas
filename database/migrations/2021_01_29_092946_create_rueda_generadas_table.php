@@ -19,7 +19,7 @@ class CreateRuedaGeneradasTable extends Migration
             $table->tinyInteger("dia");
             $table->string("hora");
             $table->tinyInteger("tipo");
-            $table->string('coches');
+            $table->text('coches');
         });
     }
 
