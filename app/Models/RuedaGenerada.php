@@ -12,7 +12,7 @@ class RuedaGenerada extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'idRueda',
+        'id_rueda',
         'dia',
         'hora',
         'tipo',

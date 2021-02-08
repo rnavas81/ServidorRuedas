@@ -1,4 +1,6 @@
 .env
+/node_modules
+/nbproject
 
 /nbproject/
 /node_modules/

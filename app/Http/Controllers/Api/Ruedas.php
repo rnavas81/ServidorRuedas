@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Rueda;
 use App\Models\Rueda_viajes_usuario;
 use App\Models\RuedaGenerada;
@@ -283,7 +284,7 @@ class Ruedas extends Controller {
                     }
                 }
                 RuedaGenerada::create([
-                    "idRueda"=>$idRueda,
+                    "id_rueda"=>$idRueda,
                     "dia"=>$dia,
                     "hora"=>$hora,
                     "tipo"=>$tipo,
@@ -291,7 +292,7 @@ class Ruedas extends Controller {
                 ]);
             }
         }
-        RuedaGenerada::where("idRueda",$idRueda)->delete();
+        RuedaGenerada::where("id_rueda",$idRueda)->delete();
         foreach ($rueda as $dia => $viajes) {
             guardarViaje($idRueda,$dia,1,$viajes["ida"]);
             guardarViaje($idRueda,$dia,2,$viajes["vuelta"]);
