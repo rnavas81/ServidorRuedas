@@ -4,68 +4,74 @@
 # el servicio de backend de la aplicación web Car Share
 version: "3.8"
 services:
-  # # Crea un proxy inverso
-  serverproxy-rueda:
-    # Imagen base para generar el contenedor
-    image: jwilder/nginx-proxy
-    # Nombre asignado al contenedor
-    container_name: serverproxy-rueda
-    # Puertos abiertos para acceder al contenedor
-    # Asigno el 81 para que no haya conflictos con el ciente
-    ports:
-      - 81:80
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    networks:
-      - desafio3-servidor
-    privileged: true
-
-  rueda-db:
+ # Contenedor para el servidor laravel
+  carshare-servidor:
     # La imagen del contenedor se construye sobre una adecuando las necesidades
-    build: ./db
-    # Nombre asignado al contenedor
-    container_name: rueda-db
-    # Red para el conjunto de contenedores
-    ports:
-      - 3306:3306
-    #La ruta del volumen debe apuntar a la carpeta que contiene los datos de la base de datos
-    volumes:
-      - database:/var/lib/mysql
-    #Variables de entorno  para el contenedor
-    environment:
-      - MYSQL_ROOT_PASSWORD=Chubaca2020
-      - MYSQL_USER=rodrigo
-      - MYSQL_PASSWORD=Chubaca2020
-    networks:
-      - desafio3-servidor
-    depends_on:
-        - serverproxy-rueda
-
-  rueda-servidor:
-    # La imagen del contenedor se construye sobre una adecuando las necesidades
+    # image: rodrigo81/carshare-servidor
     build: .
     # Nombre asignado al contenedor
-    container_name: rueda-servidor
+    container_name: carshare-servidor
     # Variable de entorno para el contendor
-    environment:
-      # Esta ruta debe estar incluida en el fichero hosts del anfitrión
-      VIRTUAL_HOST: server-ruedas.com
+    # environment:
+    #   # Esta ruta debe estar incluida en el fichero hosts del anfitrión
+    #   VIRTUAL_HOST: server-ruedas.com
+    # depends_on:
+    #     - carshare-db
     networks:
         - desafio3-servidor
     # Para la versión de desarrollo se mapea la carpeta con una local
     volumes:
         - .:/var/www/html/
-        - ./logs:/var/log
-    depends_on:
-        - rueda-db
-        - serverproxy-rueda
-    restart: on-failure
-    # command: bash -c "cp .env.example .env"
-    # command: bash -c "composer require"
-    command: bash -c "sh /var/www/html/docker-entrypoint.sh"
+    tty: true
+    # restart: unless-stopped
+
+    # command: bash -c "php composer.phar require -n"
+    command: sh -c './entrypoint.sh'
+
+  # # Crea un proxy inverso
+  # carshare-reverseproxy:
+  #   # Imagen base para generar el contenedor
+  #   image: jwilder/nginx-proxy
+  #   # Nombre asignado al contenedor
+  #   container_name: carshare-reverseproxy
+  #   # Puertos abiertos para acceder al contenedor
+  #   # Asigno el 81 para que no haya conflictos con el ciente
+  #   ports:
+  #     - 80:80
+  #   volumes:
+  #     - /var/run/docker.sock:/tmp/docker.sock:ro
+  #   networks:
+  #     - desafio3-servidor
+  #   privileged: true
+
+  # # Contenedor para la persistencia de datos
+  # carshare-db:
+  #   # La imagen del contenedor se construye sobre una adecuando las necesidades
+  #   image: rodrigo81/carshare-db
+  #   # Nombre asignado al contenedor
+  #   container_name: carshare-db
+  #   # Red para el conjunto de contenedores
+  #   ports:
+  #     - 3306:3306
+  #   #La ruta del volumen debe apuntar a la carpeta que contiene los datos de la base de datos
+  #   volumes:
+  #     - database:/var/lib/mysql
+  #   #Variables de entorno  para el contenedor
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=Chubaca2020
+  #     - MYSQL_USER=rodrigo
+  #     - MYSQL_PASSWORD=Chubaca2020
+  #   networks:
+  #     - desafio3-servidor
+  #   # depends_on:
+  #   #     - carshare-reverseproxy
+
+
+
 
 networks:
     desafio3-servidor:
         driver: bridge
 volumes:
     database:
+    html:
