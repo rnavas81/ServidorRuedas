@@ -101,7 +101,7 @@ class AuthController2 extends Controller
             $user->save();
             
             Mail::to($data['email'])->send(new RecuperarContraseña($pass));
-            if (Mail::failures()) {
+            if (!Mail::failures()) {
                 return response()->json([
                 'message' => 'Compruebe su correo electronico'
             ], 200);
@@ -109,11 +109,7 @@ class AuthController2 extends Controller
                return response()->json([
                 'message' => 'Error del sistema'
             ], 500);
-            }
-            
-            $user->password = bcrypt($pass);
-            $user->save();
-            
+            }            
             
         }else{
             return response()->json([
