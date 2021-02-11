@@ -16,7 +16,7 @@ class CreateRuedasViajesTable extends Migration
         Schema::create('ruedas_viajes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer("idRueda");
+            $table->integer("id_rueda");
             $table->tinyInteger("dia");
             $table->string("hora");
             $table->tinyInteger("tipo");

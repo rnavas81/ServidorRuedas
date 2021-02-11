@@ -1,14 +1,13 @@
-# Este documento contiene los datos para generar los contenedores necesarios
-# el servicio de backend de la aplicación web Car Share
+# Fichero de configuración para los contenedores del servidor de la aplicación CarShare
 version: "3.8"
 services:
 
   # Crea un proxy inverso
-  carshare-reverseproxy:
+  carshare-serverproxy:
     # Imagen base para generar el contenedor
     image: jwilder/nginx-proxy
     # Nombre asignado al contenedor
-    container_name: carshare-reverseproxy
+    container_name: carshare-serverproxy
     # Puertos abiertos para acceder al contenedor
     # Asigno el 81 para que no haya conflictos con el ciente
     ports:
@@ -16,7 +15,7 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
-      - carshare
+      - carshare-server
     privileged: true
 
 
@@ -36,32 +35,32 @@ services:
     env_file:
       - .env.example
     networks:
-      - carshare
+      - carshare-server
     depends_on:
-        - carshare-reverseproxy
+        - carshare-serverproxy
 
  # Contenedor para el servidor laravel
-  carshare-servidor:
+  carshare-server:
     # La imagen del contenedor se construye sobre una adecuando las necesidades
     build: .
     # Nombre asignado al contenedor
-    container_name: carshare-servidor
+    container_name: carshare-server
     # Variable de entorno para el contendor
     environment:
       # Esta ruta debe estar incluida en el fichero hosts del anfitrión
-      VIRTUAL_HOST: server-ruedas.com
+      VIRTUAL_HOST: carshare.server.local
     depends_on:
         - carshare-db
-        - carshare-reverseproxy
+        - carshare-serverproxy
     networks:
-        - carshare
+        - carshare-server
     # Se mapea la carpeta con una local
     volumes:
         - .:/var/www/html/
     # restart: always
 
 networks:
-    carshare:
+    carshare-server:
         driver: bridge
 volumes:
     database-carshare:
