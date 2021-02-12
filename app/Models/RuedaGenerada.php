@@ -9,7 +9,6 @@ class RuedaGenerada extends Model
 {
     use HasFactory;
     protected $table = 'rueda_generadas';
-    public $timestamps = false;
 
     protected $fillable = [
         'id_rueda',

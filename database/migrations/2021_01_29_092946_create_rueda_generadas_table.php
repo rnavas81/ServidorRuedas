@@ -17,10 +17,10 @@ class CreateRuedaGeneradasTable extends Migration
             $table->id();
             $table->timestamps();
             $table->integer("id_rueda");
-            $table->integer("dia");
+            $table->tinyInteger("dia");
             $table->string("hora");
-            $table->integer("tipo");
-            $table->string("coches");
+            $table->tinyInteger("tipo");
+            $table->text('coches');
         });
     }
 

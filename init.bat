@@ -1,25 +1,28 @@
 #!/bin/bash
 
-echo "\n******* Pone en marcha los contenedores..."
+echo "\n******* Creando los contenedores..."
 docker-compose up -d
 
-echo "\n******* Copia el fichero de variables del entorno..."
+echo "\n******* Copiando el fichero de variables del entorno..."
 docker exec -ti carshare-server sh -c "cp .env.example .env"
 
-echo "\n******* Recupera las dependencias necesarias de Laravel..."
+echo "\n******* Recuperando las dependencias necesarias de Laravel..."
 docker exec -ti carshare-server sh -c "php composer.phar require -n"
 
-echo "\n******* Crea la clave de seguridad..."
+echo "\n******* Generando la clave de seguridad..."
 docker exec -ti carshare-server sh -c "php artisan key:generate --force"
 
-echo "\n******* Crea las bases de datos..."
+echo "\n******* Creando bases de datos..."
 docker exec -ti carshare-server sh -c "php artisan migrate"
 
-echo "\n******* Crea las instancias necesarias para passport..."
+echo "\n******* Creando las instancias necesarias para passport..."
 docker exec -ti carshare-server sh -c "php artisan passport:install --force"
 
-echo "\n******* Rellena las bases de datos..."
+echo "\n******* Rellenando la base de datos..."
 docker exec -ti carshare-server sh -c "php artisan db:seed"
+
+sleep 3s
+
 echo ""
 echo "      ╔════════════════════╗"
 echo "      ║                    ║"

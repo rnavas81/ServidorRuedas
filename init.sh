@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "\n******* Poniendo en marcha los contenedores..."
+echo "\n******* Creando los contenedores..."
 docker-compose up -d
 
 echo "\n******* Copiando el fichero de variables del entorno..."
@@ -20,6 +20,9 @@ docker exec -ti carshare-server sh -c "php artisan passport:install --force"
 
 echo "\n******* Rellenando la base de datos..."
 docker exec -ti carshare-server sh -c "php artisan db:seed"
+
+sleep 10s
+
 echo ""
 echo "      ╔════════════════════╗"
 echo "      ║                    ║"
