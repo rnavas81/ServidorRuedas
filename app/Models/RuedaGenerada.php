@@ -19,5 +19,7 @@ class RuedaGenerada extends Model
         'coches',
     ];
     protected $hidden = [
+        'created_at',
+        'updated_at'
     ];
 }
