@@ -24,7 +24,7 @@ class Usuarios extends Controller
      */
     public function unirseRueda(Request $params){
         $idUsuario = $params->get("idUser");
-        $idRueda = $params->get("idRueda");
+        $idRueda = $params->get("id_rueda");
         $horario = $params->get("horario");
         // Borra los posibles viajes del usuario para esa rueda
         \DB::select("DELETE FROM ruedas_viajes_users WHERE id_usuario='".$idUsuario."' AND id_rueda_viaje IN (SELECT id FROM ruedas_viajes WHERE ruedas_viajes.id_rueda='".$idRueda."')");
