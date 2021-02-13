@@ -11,7 +11,7 @@ class Rueda_viaje extends Model
     use HasFactory, Notifiable;
     protected $table = 'ruedas_viajes';
     protected $fillable = [
-        'idRueda',
+        'id_rueda',
         'dia',
         'hora',
         'tipo',
@@ -22,7 +22,7 @@ class Rueda_viaje extends Model
     ];
     public function rueda(){
 //        return $this->hasMany('App\Propiedad','DNI','DNI');
-        return $this->hasOne('App\Models\Rueda','idRueda','id');
+        return $this->hasOne('App\Models\Rueda','id_rueda','id');
     }
     public function viajeros(){
         return $this->hasMany('App\Models\Rueda_viajes_usuario','id_rueda_viaje','id');

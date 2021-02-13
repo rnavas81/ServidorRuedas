@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Rueda;
 use App\Models\Rueda_viajes_usuario;
 use App\Models\RuedaGenerada;
+use Illuminate\Http\Request;
 
 class Ruedas extends Controller {
     /*
@@ -116,6 +117,11 @@ class Ruedas extends Controller {
                 $repartir = null;
                 //Comprueba en que hora hay más viajeros por coche y los pone en un coche mas
                 foreach ($viajes[$tipo]["horas"] as $hora => $viaje) {
+                    try {
+                        $avg = count($viaje['viajeros']) / count($viaje['coches']);
+                    } catch (\Throwable $th) {
+                        $avg = 0;
+                    }
                     if (count($viaje['viajeros']) / count($viaje['coches']) > $max) {
                         $max = count($viaje['viajeros']) / count($viaje['coches']);
                         $repartir = $hora;
@@ -284,7 +290,7 @@ class Ruedas extends Controller {
                     }
                 }
                 RuedaGenerada::create([
-                    "idRueda"=>$idRueda,
+                    "id_rueda"=>$idRueda,
                     "dia"=>$dia,
                     "hora"=>$hora,
                     "tipo"=>$tipo,
@@ -292,7 +298,7 @@ class Ruedas extends Controller {
                 ]);
             }
         }
-        RuedaGenerada::where("idRueda",$idRueda)->delete();
+        RuedaGenerada::where("id_rueda",$idRueda)->delete();
         foreach ($rueda as $dia => $viajes) {
             guardarViaje($idRueda,$dia,1,$viajes["ida"]);
             guardarViaje($idRueda,$dia,2,$viajes["vuelta"]);

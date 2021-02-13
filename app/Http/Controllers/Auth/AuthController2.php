@@ -97,9 +97,11 @@ class AuthController2 extends Controller
         if ($user != null) {
             $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $pass = substr(str_shuffle($permitted_chars), 0, 10);
+            $user->password = bcrypt($pass);
+            $user->save();
             
             Mail::to($data['email'])->send(new RecuperarContraseña($pass));
-            if (Mail::failures()) {
+            if (!Mail::failures()) {
                 return response()->json([
                 'message' => 'Compruebe su correo electronico'
             ], 200);
@@ -107,11 +109,7 @@ class AuthController2 extends Controller
                return response()->json([
                 'message' => 'Error del sistema'
             ], 500);
-            }
-            
-            $user->password = bcrypt($pass);
-            $user->save();
-            
+            }            
             
         }else{
             return response()->json([

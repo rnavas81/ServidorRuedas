@@ -8,13 +8,6 @@ use Illuminate\Notifications\Notifiable;
 
 class Rueda extends Model
 {
-    /*            $table->id();
-            $table->timestamps();
-            $table->string("");
-            $table->string("");
-            $table->string("");
-            $table->string("");
-    */
     use HasFactory, Notifiable;
     protected $fillable = [
         'nombre',
@@ -27,10 +20,10 @@ class Rueda extends Model
         'updated_at'
     ];
     public function viajes(){
-        return $this->hasMany('App\Models\Rueda_viaje','idRueda','id');
+        return $this->hasMany('App\Models\Rueda_viaje','id_rueda','id');
     }
-    
+
     public function generada() {
-        return $this->hasMany('App\Models\RuedaGenerada','idRueda','id');
+        return $this->hasMany('App\Models\RuedaGenerada','id_rueda','id');
     }
 }
