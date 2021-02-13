@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "\n******* Poniendo en marcha los contenedores..."
-docker-compose up -d
+docker-compose up -d --quiet-pull
 
 echo "\n******* Copiando el fichero de variables del entorno..."
 docker exec -ti carshare-server sh -c "cp .env.example .env"

@@ -1,5 +1,6 @@
 # Fichero de configuración para los contenedores del servidor de la aplicación CarShare
 version: "3.8"
+services:
 
   # Crea un proxy inverso
   carshare-serverproxy:
@@ -8,6 +9,7 @@ version: "3.8"
     # Nombre asignado al contenedor
     container_name: carshare-serverproxy
     # Puertos abiertos para acceder al contenedor
+    # Asigno el 81 para que no haya conflictos con el ciente
     ports:
       - 81:80
     volumes:
@@ -16,22 +18,22 @@ version: "3.8"
       - carshare-server
     privileged: true
 
-  rueda-db:
-    # La imagen del contenedor se construye sobre una adecuando las necesidades
-    image: mariadb:10.5.8
+
+  # Contenedor para la persistencia de datos
+  carshare-db:
+    # La imagen del contenedor está preparada en dockerhub
+    image: rodrigo81/carshare-db
     # Nombre asignado al contenedor
-    container_name: rueda-db
+    container_name: carshare-db
     # Red para el conjunto de contenedores
     ports:
-        - 3306:3306
+      - 3306:3306
     #La ruta del volumen debe apuntar a la carpeta que contiene los datos de la base de datos
     volumes:
-        - database:/var/lib/mysql
+      - database-carshare:/var/lib/mysql
     #Variables de entorno  para el contenedor
-    environment:
-        - MYSQL_ROOT_PASSWORD=Chubaca2020
-        - MYSQL_USER=rodrigo
-        - MYSQL_PASSWORD=Chubaca2020
+    env_file:
+      - .env.example
     networks:
       - carshare-server
     depends_on:
@@ -55,12 +57,10 @@ version: "3.8"
     # Se mapea la carpeta con una local
     volumes:
         - .:/var/www/html/
-    depends_on:
-        - rueda-db
-        - serverproxy-rueda
+    # restart: always
 
 networks:
     carshare-server:
         driver: bridge
 volumes:
-    database:
+    database-carshare:
