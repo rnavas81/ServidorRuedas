@@ -1,4 +1,7 @@
-<div style="text-align:center"><img src ="resRead/Banner.png" /></div>
+<p align="center">
+  <img src="resRead/Banner.png" alt="banner"/>
+</p>
+
 # CarShare - API
 _Servidor API para la aplicacion de CarShare desarrollada en en curso academico 2020/2021 para el CIFP Virgen de Gracia (Puertollano)._
 
