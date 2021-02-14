@@ -1,5 +1,5 @@
 # Fichero de configuración para los contenedores del servidor de la aplicación CarShare
-version: "3.8"
+version: "3.7"
 services:
 
   # Crea un proxy inverso
