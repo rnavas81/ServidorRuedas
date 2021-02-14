@@ -82,7 +82,7 @@ class AuthController2 extends Controller
             'id' => $user->id,
             'name' => $user->name,
             'surname' => $user->surname,
-            'mail' => $user->email,
+            'email' => $user->email,
             'access_token' => $accessToken
         ], 200);
     }
