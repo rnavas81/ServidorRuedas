@@ -1,4 +1,4 @@
-![](resRead/Banner.png)
+<div style="text-align:center"><img src ="resRead/Banner.png" /></div>
 # CarShare - API
 _Servidor API para la aplicacion de CarShare desarrollada en en curso academico 2020/2021 para el CIFP Virgen de Gracia (Puertollano)._
 
@@ -55,7 +55,7 @@ El proyecto ha sido realizado con:
 ### Contribuidores:
 * [Rodrigo](https://github.com/rnavas81)
 * [Jorge](https://github.com/IamUnder)
-* [Alejandro](https://github.com/djmarpe)
+* [Alejandro](https://github.com/djmarpe)  
 Si desea realizar alguna aportacion o corrección al codigo esta sera bien recibida atraves de un _pull resquest_
 
 ### Licencia:
