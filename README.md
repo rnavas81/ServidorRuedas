@@ -10,8 +10,8 @@ utilizar los ficheros .sh y .bat para desplegar el docker en su equipo_
 
 ### Instalación
 _Para la instalacion de PHP para despliegue local:_
-_Windows:_
-_Debera de realizar la instalacion manual del paquete o utilizar alguna de los famosos paquetes "todo en uno" que ya lo traen instalado, como XAMPP o WampServer_
+_Windows:  _
+_Debera de realizar la instalacion manual del paquete o utilizar alguna de los famosos paquetes "todo en uno" que ya lo traen instalado, como XAMPP o WampServer  _
 _Linux:_
 ```
 sudo apt-get update
