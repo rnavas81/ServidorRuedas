@@ -1,5 +1,0 @@
-2021-02-08 09:41:32,484 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
-2021-02-08 09:41:32,484 WARN No file matches via include "/etc/supervisor/conf.d/*.conf"
-2021-02-08 09:41:32,488 INFO supervisord started with pid 1
-2021-02-08 09:41:33,491 INFO spawned: 'app' with pid 9
-2021-02-08 09:41:34,493 INFO success: app entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
