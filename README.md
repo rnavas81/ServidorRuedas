@@ -8,8 +8,7 @@ _Servidor API para la aplicacion de CarShare desarrollada en en curso academico 
 ### Tecnologias:
 El proyecto ha sido realizado con:  
 [![Generic badge](https://img.shields.io/badge/Tecnologia-Laravel-red.svg)](https://laravel.com)
-[![Generic badge](https://img.shields.io/badge/Tecnologia-PHPStorm-blueviolet.svg)](https://www.jetbrains.com/es-es/phpstorm/)
-[![Generic badge](https://img.shields.io/badge/Tecnologia-NetBeans-blue.svg)](https://netbeans.org)
+[![Generic badge](https://img.shields.io/badge/Tecnologia-PHP8.0-blue.svg)](https://www.php.net)
 
 ## Comienzo
 _Las siguientes intrucciones te ayudaran a tener el proyecto funcionando en tu maquina local._
