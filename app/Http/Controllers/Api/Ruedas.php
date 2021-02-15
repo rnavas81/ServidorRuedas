@@ -117,6 +117,11 @@ class Ruedas extends Controller {
                 $repartir = null;
                 //Comprueba en que hora hay más viajeros por coche y los pone en un coche mas
                 foreach ($viajes[$tipo]["horas"] as $hora => $viaje) {
+                    try {
+                        $avg = count($viaje['viajeros']) / count($viaje['coches']);
+                    } catch (\Throwable $th) {
+                        $avg = 0;
+                    }
                     if (count($viaje['viajeros']) / count($viaje['coches']) > $max) {
                         $max = count($viaje['viajeros']) / count($viaje['coches']);
                         $repartir = $hora;
