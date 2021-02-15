@@ -1,4 +1,6 @@
 #!/bin/bash
+echo "\n******* Actualizando los permisos de la carpeta..."
+chmod 777 -R .
 
 echo "\n******* Creando los contenedores..."
 docker-compose up -d
