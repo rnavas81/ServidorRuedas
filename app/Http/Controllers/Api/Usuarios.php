@@ -92,9 +92,9 @@ class Usuarios extends Controller {
     public function upImg(Request $request) {
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = $file->getClientOriginalName();
+            $filename = $request->id;
             $extension = $file->getClientOriginalExtension();
-            $picture = date('His') . '-' . $filename;
+            $picture = $filename . '.' . $extension;
             //move image to public/img folder
             $file->move(public_path('img'), $picture);
             return response()->json(["message" => "Image Uploaded Succesfully"]);
