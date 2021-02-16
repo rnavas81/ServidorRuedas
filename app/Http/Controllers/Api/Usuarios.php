@@ -32,14 +32,15 @@ class Usuarios extends Controller
         foreach ($horario as $item) {
             foreach ($item as $id){
                 Rueda_viajes_usuario::create([
-                    'id_rueda_viaje'=>$id,
+                    'id_rueda_viaje'=>$idRueda,
                     'id_usuario'=>$idUsuario,
                     'reglas'=>"",
                 ]);
             }
         }
 
-        app('App\Http\Controllers\Api\Ruedas')->generateRueda($id);
+        app('App\Http\Controllers\Api\Ruedas')->generateRueda($idRueda);
+
         return response()->json([
             'message' => 'Ok',
         ], 201);
