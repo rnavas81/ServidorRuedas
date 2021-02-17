@@ -24,7 +24,7 @@ class Usuarios extends Controller
      */
     public function unirseRueda(Request $params){
         $idUsuario = $params->get("idUser");
-        $idRueda = $params->get("id_rueda");
+        $idRueda = $params->get("idRueda");
         $horario = $params->get("horario");
         // Borra los posibles viajes del usuario para esa rueda
         \DB::select("DELETE FROM ruedas_viajes_users WHERE id_usuario='".$idUsuario."' AND id_rueda_viaje IN (SELECT id FROM ruedas_viajes WHERE ruedas_viajes.id_rueda='".$idRueda."')");
@@ -32,7 +32,7 @@ class Usuarios extends Controller
         foreach ($horario as $item) {
             foreach ($item as $id){
                 Rueda_viajes_usuario::create([
-                    'id_rueda_viaje'=>$idRueda,
+                    'id_rueda_viaje'=>$id,
                     'id_usuario'=>$idUsuario,
                     'reglas'=>"",
                 ]);
@@ -49,7 +49,6 @@ class Usuarios extends Controller
     public function comprobarEstado(Request $params){
         $id = $params->get('idUser');
         $user = User::with('ruedas')->where("id",$id)->first();
-//        dd(count($user->ruedas));
         return response()->json([
             'registered'=>count($user->ruedas)>0
         ], 200);
