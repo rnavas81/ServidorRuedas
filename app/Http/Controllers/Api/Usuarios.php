@@ -66,21 +66,21 @@ class Usuarios extends Controller {
         ]);
         if ($user->save()) {
             $response = response()->json([
-                    'message' => 'Creacion satisfactoria',
-                    'code' => '200'
-                        ], 200);
-        }else{
+                'message' => 'Creacion satisfactoria',
+                'code' => '200'
+                    ], 200);
+        } else {
             $response = response()->json([
-                    'message' => 'Error del servidor',
-                    'code' => '500'
-                        ], 500);
+                'message' => 'Error del servidor',
+                'code' => '500'
+                    ], 500);
         }
-        
+
         $idUsuario = DB::table('users')
-                        ->select('id')
-                        ->where('email','=',$user->email)
-                        ->get();
-        
+                ->select('id')
+                ->where('email', '=', $user->email)
+                ->get();
+
         $asignacionRol = new AsignacionRol([
             'idUsuario' => $idUsuario[0]->id,
             'rol' => $request->rol,
@@ -112,16 +112,43 @@ class Usuarios extends Controller {
     }
 
     public function editUser(Request $request) {
-        DB::table('users')
-                ->where('id', $request->id)
-                ->update(['email' => $request->email]);
+        //Si no cambia la contraseña
+        if ($request->editPassword2 == null) {
+            $editUser = DB::table('users')
+                    ->where('id', $request->idUsuario)
+                    ->update(['name' => $request->editName,
+                'surname' => $request->editSurname,
+                'email' => $request->editEmail]);
+        } else {
+            //Si pone una contraseña nueva
+            $editUser = DB::table('users')
+                    ->where('id', $request->idUsuario)
+                    ->update(['name' => $request->editName,
+                'surname' => $request->editSurname,
+                'email' => $request->editEmail,
+                'password' => bcrypt($request->editPassword2)]);
+        }
 
-        DB::table('asignacion_rols')
-                ->where('idUsuario', $request->id)
-                ->update(['rol' => $request->rol]);
+        $editRol = DB::table('asignacion_rols')
+                ->where('idUsuario', $request->idUsuario)
+                ->update(['rol' => $request->editRol]);
 
         return response()->json([
                     'editado' => ('OK')
+                        ], 200);
+    }
+
+    public function deleteUser(Request $request) {
+        DB::table('users')
+                ->where('id', $request->id)
+                ->delete();
+
+        DB::table('asignacion_rols')
+                ->where('idUsuario', $request->id)
+                ->delete();
+
+        return response()->json([
+                    'borrado' => ('OK')
                         ], 200);
     }
 

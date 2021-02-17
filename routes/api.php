@@ -44,3 +44,4 @@ Route::get('/rueda/generada', [App\Http\Controllers\Api\Ruedas::class, 'getRueda
 Route::post('/administrador/createUser', [App\Http\Controllers\Api\Usuarios::class, 'crearUsuario']);
 Route::get('/administrador/getUsers', [App\Http\Controllers\Api\Usuarios::class, 'getUsers']);
 Route::post('/administrador/editUser', [App\Http\Controllers\Api\Usuarios::class, 'editUser']);
+Route::post('/administrador/deleteUser', [App\Http\Controllers\Api\Usuarios::class, 'deleteUser']);
