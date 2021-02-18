@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Mail\RecuperarContraseña;
+use App\Mail\Verificar;
 use Illuminate\Support\Facades\Mail;
 
 class AuthController2 extends Controller
@@ -26,11 +27,38 @@ class AuthController2 extends Controller
             'email'    => $request->email,
             'password' => bcrypt($request->password),
         ]);
-        $user->save();
-        return response()->json([
-            'message' => 'Creacion satisfactoria',
-            'code' => '201'
-        ], 201);
+        
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $code = substr(str_shuffle($permitted_chars), 0, 15);
+        $user->remember_token = $code;
+        
+        $url = "http://127.0.0.1:8000/api/" . "check/" . $code;
+        
+            
+        Mail::to($user->email)->send(new Verificar($user->name, $user->surname, $url));
+        if (!Mail::failures()) {
+            $user->save();
+            return response()->json([
+                'message' => 'Creacion satisfactoria, verifique su email.',
+                'code' => '201'
+            ], 201);
+        } else {
+           return response()->json([
+            'message' => 'Error del sistema'
+        ], 500);
+        }
+    }
+    
+    public function check($clave) {
+        $user = User::where('remember_token',$clave)->first();
+        if ($user != null) {
+            $user->email_verified_at = time();
+            $user->remember_token = null;
+            $user->status = "1";
+            $user->save();
+            return redirect('http://localhost:4200/home');
+        }
+        
     }
 
     public function login2(Request $request)
@@ -72,6 +100,9 @@ class AuthController2 extends Controller
             return response()->json(['message' => 'Login incorrecto. Revise las credenciales.'], 400);
         }
         $user = auth()->user();
+        if ($user->status != 1) {
+            return response()->json(['message' => 'Correo sin verificar'], 400);
+        }
         $accessToken = auth()->user()->createToken('authToken')->accessToken;
 
         //return response(['user' => auth()->user(), 'access_token' => $accessToken]);
