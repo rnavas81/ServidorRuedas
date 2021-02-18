@@ -36,5 +36,12 @@ Route::post('/signup', [App\Http\Controllers\Auth\AuthController2::class, 'signu
 Route::post('/login', [App\Http\Controllers\Auth\AuthController2::class, 'login'])->name('login');
 Route::post('/forget', [App\Http\Controllers\Auth\AuthController2::class, 'forget'])->name('forget');
 
+
 Route::get('/rueda/generada/{id}', [App\Http\Controllers\Api\Ruedas::class, 'getRuedaGenerada']);
 Route::get('/rueda/generada', [App\Http\Controllers\Api\Ruedas::class, 'getRuedaGenerada']);
+
+
+Route::post('/administrador/createUser', [App\Http\Controllers\Api\Usuarios::class, 'crearUsuario']);
+Route::get('/administrador/getUsers', [App\Http\Controllers\Api\Usuarios::class, 'getUsers']);
+Route::post('/administrador/editUser', [App\Http\Controllers\Api\Usuarios::class, 'editUser']);
+Route::post('/administrador/deleteUser', [App\Http\Controllers\Api\Usuarios::class, 'deleteUser']);
