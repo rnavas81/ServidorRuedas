@@ -25,6 +25,9 @@ Route::get('/test',function (Request $params){
 //Ruedas
 Route::post('/usuario/unirse',[App\Http\Controllers\Api\Usuarios::class,'unirseRueda']);
 Route::post('/usuario/estado',[App\Http\Controllers\Api\Usuarios::class,'comprobarEstado']);
+Route::post('/usuario/edit',[App\Http\Controllers\Api\Usuarios::class,'edit']);
+Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
+Route::post('/usuario/img',[App\Http\Controllers\Api\Usuarios::class,'upImg']);
 //Usuario
 Route::get('/rueda',[App\Http\Controllers\Api\Ruedas::class,'getRueda']);
 Route::get('/rueda/{id}',[App\Http\Controllers\Api\Ruedas::class,'getRueda']);
