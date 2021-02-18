@@ -16,4 +16,13 @@ class AsignacionRol extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function roles(){
+        return $this->hasOne('App\Models\Rol','id','rol');
+    }
+
+    public function users(){
+        return $this->hasOne('App\Models\User', 'id','idUsuario');
+    }
+
 }
