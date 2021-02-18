@@ -87,7 +87,7 @@ class Ruedas extends Controller {
             }
         }while(!$exito);
         // Para hacer pruebas
-        // $this->pintarTabla($semana);
+        $this->pintarTabla($semana);
         // Almacena la tabla generada
         if($exito)$this->guardarRuedaGenerada($id,$semana);
         return $exito;
@@ -164,7 +164,27 @@ class Ruedas extends Controller {
             }
             // Recupera los usuarios de ese viaje
             $viajeros = Rueda_viajes_usuario::with('usuario')->where('id_rueda_viaje', '=', $viaje->id)->get();
-            $cuantosCoches = intdiv(count($viajeros), 4) + (count($viajeros) % 4 == 0 ? 0 : 1);
+            $cuantosCoches = 0;
+            $cuantosViajeros = 0;
+            $cuantasPlazas = 0;
+            $asignarConductores = [];
+            foreach ($viajeros as $index=>$viajero) {
+                try {
+                    $viajero->usuario->reglas=json_decode($viajero->reglas);
+                } catch (\Throwable $th) {
+                    $viajero->usuario->reglas = ["irSolo"=>0,"plazas"=>4];
+                }
+                $viajeros[$index]=$viajero;
+                if($viajero->usuario->reglas->irSolo==0){
+                    $cuantosViajeros++;
+                    $cuantasPlazas+=$viajero->usuario->reglas->plazas;
+                } elseif($viajero->usuario->reglas->irSolo==1){
+                    $cuantosCoches++;
+                    $asignarConductores[]=$viajero->usuario->id;
+                }
+            }
+            $avg = intdiv($cuantasPlazas,$cuantosViajeros);
+            $cuantosCoches += intdiv(count($viajeros), $avg) + (count($viajeros) % $avg == 0 ? 0 : 1);
             //Cuenta los coches que se necesitarán para esa hora y los suma al total de coches para la ida y la vuelta
             $semana[$viaje->dia][$viaje->tipo == 1 ? "ida" : "vuelta"]["horas"][$viaje->hora] = [
                 "viajeros" => [],
@@ -175,6 +195,10 @@ class Ruedas extends Controller {
                 ])
             ];
             $semana[$viaje->dia][$viaje->tipo == 1 ? "ida" : "vuelta"]["totalcoches"] += $cuantosCoches;
+            foreach($asignarConductores AS $ind=>$conductor){
+                $semana[$viaje->dia][$viaje->tipo == 1 ? "ida" : "vuelta"]["horas"][$viaje->hora]["coches"][$ind]["conductor"]=$conductor;
+            }
+
             foreach ($viajeros as $viajero) {
                 if(!in_array($viajero->usuario->id,$this->condiciones["viajeros"]))$this->condiciones["viajeros"][]=$viajero->usuario->id;
                 $semana[$viaje->dia][$viaje->tipo == 1 ? "ida" : "vuelta"]["horas"][$viaje->hora]["viajeros"][$viajero->usuario->id] = $viajero->usuario;
@@ -220,11 +244,6 @@ class Ruedas extends Controller {
                     }
                 }
                 $this->agregarCoche($viajes[$tipo],$repartir);
-                // $viajes[$tipo]["horas"][$repartir]["coches"][] = [
-                //     "conductor" => null,
-                //     "pasajeros" => [],
-                // ];
-                // $viajes[$tipo]["totalcoches"]++;
             }
             $semana[$diaN] = $viajes;
         }
@@ -326,6 +345,10 @@ class Ruedas extends Controller {
                         }
                     }
                 } else { //Si no se puede ser conductor...
+                    // Si no puede ser pero va solo tiene que ser
+                    if($conductor->reglas->irSolo==1){
+                        $esImposible = true;
+                    }
                     //Comprueba si quedan viajeros para probar como conductor
                     if($this->quedanViajeros($posicion,$cuadrante[$dias[$dia]]["ida"]["horas"][$horas[$hora]])){
                         //Pasamos al siguiente conductor de los disponibles en esa franja.
@@ -361,7 +384,6 @@ class Ruedas extends Controller {
     }
     /** */
     private function puedeSerConductor($cuadrante, $hora, $dia, $conductor){
-        global $condiciones;
         $id = $conductor->id;
         $viajes = $cuadrante[$dia]["vuelta"]["horas"];
         if(in_array($id,$cuadrante[$dia]["ida"]["horas"][$hora]["conductores"])){
@@ -469,11 +491,18 @@ class Ruedas extends Controller {
      * @param Integer $conductor Identificador del conductor
      */
     private function cancelarConductor(&$dia,$conductor){
+        $horaIda=null;
+        $cocheIda=null;
+        $horaVuelta=null;
+        $cocheVuelta=null;
+        $conductorData= null;
         foreach ($dia["ida"]["horas"] as $hora => $viaje) {
             if(array_key_exists($conductor,$viaje["viajeros"])){
+                if($viaje["viajeros"][$conductor]->reglas->irSolo==1)return ;
                 $dia["ida"]["horas"][$hora]["conductores"]=array_diff($viaje["conductores"],[$conductor]);
                 foreach ($viaje["coches"] as $key => $coche) {
                     if($coche["conductor"] == $conductor){
+                        $horaIda =
                         $dia["ida"]["horas"][$hora]["coches"][$key]["conductor"]=null;
                         $dia["ida"]["horas"][$hora]["coches"][$key]["pasajeros"]=[];
                     }
@@ -514,7 +543,10 @@ class Ruedas extends Controller {
         $i=0;
         foreach ($viaje["viajeros"] as $idViajero=>$viajero) {
             if(!in_array($idViajero,$viaje["conductores"])){
-                $viaje["coches"][$i]["pasajeros"][]=$idViajero;
+                // $this->output($viaje["viajeros"][$viaje["coches"][$i]["conductor"]]->id." ".$i." ".$viaje["viajeros"][$viaje["coches"][$i]["conductor"]]->reglas->irSolo,true);
+                if($viaje["viajeros"][$viaje["coches"][$i]["conductor"]]->reglas->irSolo == 0){
+                    $viaje["coches"][$i]["pasajeros"][]=$idViajero;
+                }
                 $i++;
                 if($i>=count($viaje["coches"]))$i=0;
             }

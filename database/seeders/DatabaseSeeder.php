@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
                 \App\Models\Rueda_viajes_usuario::create([
                     "id_rueda_viaje"=>$idViaje,
                     "id_usuario"=>$usuario->id,
-                    "reglas"=>""
+                    "reglas"=>'{"irSolo":0,"plazas":4}'
                 ]);
             }
         }
