@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // Rutas Publicas
 //Ruta de prueba
 Route::get('/test',function (Request $params){
-    return true;
+    return redirect('https://www.google.es');
 });
 //Ruedas
 Route::post('/usuario/unirse',[App\Http\Controllers\Api\Usuarios::class,'unirseRueda']);
@@ -34,6 +34,7 @@ Route::get('/rueda/{id}',[App\Http\Controllers\Api\Ruedas::class,'getRueda']);
 Route::get('/rueda/generar',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
 Route::get('/rueda/generar/{id}',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
 
+Route::get('/check/{clave}',[App\Http\Controllers\Auth\AuthController2::class,'check']);
 
 Route::post('/signup', [App\Http\Controllers\Auth\AuthController2::class, 'signup'])->name('signup');
 Route::post('/login', [App\Http\Controllers\Auth\AuthController2::class, 'login'])->name('login');

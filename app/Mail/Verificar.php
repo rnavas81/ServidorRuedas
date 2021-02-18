@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class RecuperarContraseña extends Mailable
+class Verificar extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -17,11 +17,15 @@ class RecuperarContraseña extends Mailable
      * @return void
      */
     
-    public $password;
+    public $name;
+    public $surname;
+    public $url;
     
-    public function __construct($password)
+    public function __construct($name, $surname, $url)
     {
-        $this->password = $password;
+        $this->name = $name;
+        $this->surname = $surname;
+        $this->url = $url;
     }
 
     /**
@@ -31,6 +35,6 @@ class RecuperarContraseña extends Mailable
      */
     public function build()
     {
-        return $this->view('email');
+        return $this->view('check');
     }
 }
