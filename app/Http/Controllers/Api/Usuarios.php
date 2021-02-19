@@ -189,43 +189,43 @@ class Usuarios extends Controller {
                         ], 200);
     }
 
-    public function upImg(Request $request) {
-        if ($request->hasFile('image')) {
-//            $file = $request->file('image');
-//            $filename = $request->id;
-//            $extension = $file->getClientOriginalExtension();
-//            $picture = $filename . '.' . $extension;
-//            //move image to public/img folder
-//            $file->move(public_path('img'), $picture);
-
-            
-            $image = $request->file('image'); //image file from frontend 
-            $name = date('Ymd');
-            $firebase_storage_path = '';  
-            $localfolder = public_path('firebase-temp-uploads') . '/';
-            $extension = $image->getClientOriginalExtension();
-            $file = $name . '.' . $extension;
-            if ($image->move($localfolder, $file)) {
-                $uploadedfile = fopen($localfolder . $file, 'r');
-                //Linea importante el resto esta de relleno y testing
-                app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file,"metadata" => [  "contentType"=> 'image/png']]);
-                //will remove from local laravel folder  
-                unlink($localfolder . $file);
-                $url = "https://firebasestorage.googleapis.com/v0/b/carshare-vdg.appspot.com/o/".$file."?alt=media";
-                
-                // Actualizamos la url para el usuario
-                $user = User::find($request->id);
-                $user->avatar = $url;
-                $user->save();
-                
-                return response()->json(["message" => "Image Uploaded Succesfully"],200);
-            } else {
-               return response()->json(["message" => "Sigue sin ir"],400);
-            }
-        } else {
-            return response()->json(["message" => "Select image first."],200);
-        }
-    }
+//    public function upImg(Request $request) {
+//        if ($request->hasFile('image')) {
+////            $file = $request->file('image');
+////            $filename = $request->id;
+////            $extension = $file->getClientOriginalExtension();
+////            $picture = $filename . '.' . $extension;
+////            //move image to public/img folder
+////            $file->move(public_path('img'), $picture);
+//
+//            
+//            $image = $request->file('image'); //image file from frontend 
+//            $name = date('Ymd');
+//            $firebase_storage_path = '';  
+//            $localfolder = public_path('firebase-temp-uploads') . '/';
+//            $extension = $image->getClientOriginalExtension();
+//            $file = $name . '.' . $extension;
+//            if ($image->move($localfolder, $file)) {
+//                $uploadedfile = fopen($localfolder . $file, 'r');
+//                //Linea importante el resto esta de relleno y testing
+//                app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file,"metadata" => [  "contentType"=> 'image/png']]);
+//                //will remove from local laravel folder  
+//                unlink($localfolder . $file);
+//                $url = "https://firebasestorage.googleapis.com/v0/b/carshare-vdg.appspot.com/o/".$file."?alt=media";
+//                
+//                // Actualizamos la url para el usuario
+//                $user = User::find($request->id);
+//                $user->avatar = $url;
+//                $user->save();
+//                
+//                return response()->json(["message" => "Image Uploaded Succesfully"],200);
+//            } else {
+//               return response()->json(["message" => "Sigue sin ir"],400);
+//            }
+//        } else {
+//            return response()->json(["message" => "Select image first."],200);
+//        }
+//    }
     
     public function modify(Request $request) {
         if ($user = User::find($request->id)) {
