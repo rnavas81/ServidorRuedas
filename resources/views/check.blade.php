@@ -25,16 +25,17 @@
             <tr>
                 <td style="background-color: #ecf0f1">
                     <div style="color: #34495e; margin: 4% 10% 2%; text-align: justify;font-family: sans-serif">
-                        <h2 style="color: #e67e22; margin: 0 0 7px">Saludos desde CarShare!</h2>
+                        <h2 style="color: #e67e22; margin: 0 0 7px">Bienvenidos a CarShare!</h2>
                         <p style="margin: 2px; font-size: 15px">
-                            Le comunicamos que se ha restablecido la contraseña a una nueva, si usted no la ha solicitado,
-                        póngase en contacto a través del email que le facilitamos al final del email</p>
+                            ¡Hola {{ $name ?? "Error con el nombre." }}
+                            {{ $surname ?? "Error con el apellido." }}
+                            !Nos complace darle la bienvenida a la red de usuarios de CarShare, desde ahora empezara a agilizar sus viajes compartiéndolos con otros selectos usuarios.</p>
                         <br>
                         <p style="margin: 2px; font-size: 15px">
-                            Su nueva contaseña es: <b>{{ $password ?? 'Ha ocurrido un error.' }}</b></p>
+                            Para ello debe de verificar su correo: <b><a href="{{ $url ?? 'Error con el link de validacion.' }}">Click aqui!</a></b></p>
                         <br>
                         <p style="margin: 2px; font-size: 15px">
-                            Para cualquier problema póngase en contacto con nosotros a través de: CarShare@administracion.com</p>
+                            Si usted no se ha registrado o tiene cualquier problema póngase en contacto con nosotros a través de: carshare.ifpvdg@gmail.com</p>
                         
                         <div style="width: 100%; text-align: center; margin-top: 50px">
                             <a style="text-decoration: none; border-radius: 5px; padding: 11px 23px; color: white; background-color: #3498db" href="{{ env('APP_ROUTE') }}">Ir a la web</a>	

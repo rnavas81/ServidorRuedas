@@ -8,13 +8,6 @@ use Illuminate\Notifications\Notifiable;
 
 class Rueda extends Model
 {
-    /*            $table->id();
-            $table->timestamps();
-            $table->string("");
-            $table->string("");
-            $table->string("");
-            $table->string("");
-    */
     use HasFactory, Notifiable;
     protected $fillable = [
         'nombre',

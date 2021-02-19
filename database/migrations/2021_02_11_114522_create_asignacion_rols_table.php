@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRuedasTable extends Migration
+class CreateAsignacionRolsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateRuedasTable extends Migration
      */
     public function up()
     {
-        Schema::create('ruedas', function (Blueprint $table) {
+        Schema::create('asignacion_rols', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string("nombre");
-            $table->string("descripcion");
-            $table->string("origen");
-            $table->string("destino");
+            $table->string('idUsuario');
+            $table->tinyInteger('rol');
         });
     }
 
@@ -30,6 +28,6 @@ class CreateRuedasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ruedas');
+        Schema::dropIfExists('asignacion_rols');
     }
 }
