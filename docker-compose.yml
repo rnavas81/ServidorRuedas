@@ -43,6 +43,7 @@ services:
   carshare-server:
     # La imagen del contenedor se construye sobre una adecuando las necesidades
     build: .
+    # image: rodrigo81/carshare-servidor
     # Nombre asignado al contenedor
     container_name: carshare-server
     # Variable de entorno para el contendor

@@ -6,9 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\AsignacionRol;
+use App\Models\Rol;
 use Carbon\Carbon;
 use App\Mail\RecuperarContraseña;
+use App\Mail\Verificar;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 
 class AuthController2 extends Controller
 {
@@ -26,11 +30,42 @@ class AuthController2 extends Controller
             'email'    => $request->email,
             'password' => bcrypt($request->password),
         ]);
-        $user->save();
-        return response()->json([
-            'message' => 'Creacion satisfactoria',
-            'code' => '201'
-        ], 201);
+
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $code = substr(str_shuffle($permitted_chars), 0, 15);
+        $user->remember_token = $code;
+
+        $url = $_SERVER['SERVER_NAME'] .  DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . "api" . DIRECTORY_SEPARATOR . "check" . DIRECTORY_SEPARATOR . $code;
+
+
+        Mail::to($user->email)->send(new Verificar($user->name, $user->surname, $url));
+        if (!Mail::failures()) {
+            $user->save();
+            AsignacionRol::create([
+                'idUsuario'=>$user->id,
+                'rol'=>2
+            ]);
+            return response()->json([
+                'message' => 'Creacion satisfactoria, verifique su email.',
+                'code' => '201'
+            ], 201);
+        } else {
+           return response()->json([
+            'message' => 'Error del sistema'
+        ], 500);
+        }
+    }
+
+    public function check($clave) {
+        $user = User::where('remember_token',$clave)->first();
+        if ($user != null) {
+            $user->email_verified_at = time();
+            $user->remember_token = null;
+            $user->status = "1";
+            $user->save();
+            return redirect(env("APP_ROUTE"));
+        }
+
     }
 
     public function login2(Request $request)
@@ -61,6 +96,10 @@ class AuthController2 extends Controller
         ]);
     }
 
+    public function prueba(Request $request){
+        $rol = AsignacionRol::with(["roles","users"])->first();
+    }
+
     public function login(Request $request){
         $loginData = $request->validate([
             'email' => 'email|required',
@@ -72,34 +111,44 @@ class AuthController2 extends Controller
             return response()->json(['message' => 'Login incorrecto. Revise las credenciales.'], 400);
         }
         $user = auth()->user();
+        if ($user->status != 1) {
+            return response()->json(['message' => 'Correo sin verificar'], 400);
+        }
         $accessToken = auth()->user()->createToken('authToken')->accessToken;
 
         //return response(['user' => auth()->user(), 'access_token' => $accessToken]);
 //        return response()->json(['message' => ['user' => auth()->user(), 'access_token' => $accessToken], 'code' => 200], 200);
 
-        return response()->json([
+        $rol = AsignacionRol::with("roles","users")
+            ->where('idUsuario',$user->id)
+            ->first();
+
+        $return = [
             'message' => 'Login correcto',
             'id' => $user->id,
             'name' => $user->name,
             'surname' => $user->surname,
-            'mail' => $user->email,
-            'access_token' => $accessToken
-        ], 200);
+            'email' => $user->email,
+            'access_token' => $accessToken,
+            'avatar' => $user->avatar,
+            'rol' => $rol->roles->id,
+        ];
+        return response()->json($return, 200);
     }
-    
+
     public function forget(Request $request) {
         $data = $request->validate([
             'email' => 'email|required'
         ]);
-       
-        
+
+
         $user = User::where('email',$data['email'])->first();
         if ($user != null) {
             $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $pass = substr(str_shuffle($permitted_chars), 0, 10);
             $user->password = bcrypt($pass);
             $user->save();
-            
+
             Mail::to($data['email'])->send(new RecuperarContraseña($pass));
             if (!Mail::failures()) {
                 return response()->json([
@@ -109,13 +158,13 @@ class AuthController2 extends Controller
                return response()->json([
                 'message' => 'Error del sistema'
             ], 500);
-            }            
-            
+            }
+
         }else{
             return response()->json([
                 'message' => 'Compruebe su correo electronico'
             ], 200);
         }
     }
-    
+
 }
