@@ -30,17 +30,21 @@ class AuthController2 extends Controller
             'email'    => $request->email,
             'password' => bcrypt($request->password),
         ]);
-        
+
         $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $code = substr(str_shuffle($permitted_chars), 0, 15);
         $user->remember_token = $code;
-        
-        $url = "http://127.0.0.1:8000/api/" . "check/" . $code;
-        
-            
+
+        $url = $_SERVER['SERVER_NAME'] .  DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . "api" . DIRECTORY_SEPARATOR . "check" . DIRECTORY_SEPARATOR . $code;
+
+
         Mail::to($user->email)->send(new Verificar($user->name, $user->surname, $url));
         if (!Mail::failures()) {
             $user->save();
+            AsignacionRol::create([
+                'idUsuario'=>$user->id,
+                'rol'=>2
+            ]);
             return response()->json([
                 'message' => 'Creacion satisfactoria, verifique su email.',
                 'code' => '201'
@@ -51,7 +55,7 @@ class AuthController2 extends Controller
         ], 500);
         }
     }
-    
+
     public function check($clave) {
         $user = User::where('remember_token',$clave)->first();
         if ($user != null) {
@@ -59,9 +63,9 @@ class AuthController2 extends Controller
             $user->remember_token = null;
             $user->status = "1";
             $user->save();
-            return redirect('http://localhost:4200/home');
+            return redirect(env("APP_ROUTE"));
         }
-        
+
     }
 
     public function login2(Request $request)
@@ -125,26 +129,26 @@ class AuthController2 extends Controller
             'name' => $user->name,
             'surname' => $user->surname,
             'email' => $user->email,
-            'access_token' => $accessToken
+            'access_token' => $accessToken,
             'avatar' => $user->avatar,
             'rol' => $rol->roles->id,
         ];
         return response()->json($return, 200);
     }
-    
+
     public function forget(Request $request) {
         $data = $request->validate([
             'email' => 'email|required'
         ]);
-       
-        
+
+
         $user = User::where('email',$data['email'])->first();
         if ($user != null) {
             $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $pass = substr(str_shuffle($permitted_chars), 0, 10);
             $user->password = bcrypt($pass);
             $user->save();
-            
+
             Mail::to($data['email'])->send(new RecuperarContraseña($pass));
             if (!Mail::failures()) {
                 return response()->json([
@@ -154,13 +158,13 @@ class AuthController2 extends Controller
                return response()->json([
                 'message' => 'Error del sistema'
             ], 500);
-            }            
-            
+            }
+
         }else{
             return response()->json([
                 'message' => 'Compruebe su correo electronico'
             ], 200);
         }
     }
-    
+
 }

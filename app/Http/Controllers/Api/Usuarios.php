@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\AsignacionRol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Kreait\Laravel\Firebase\Facades\Firebase;
+// use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class Usuarios extends Controller {
 
@@ -96,16 +96,17 @@ class Usuarios extends Controller {
     }
 
     public function getUsers() {
-        $usuarios = DB::table('users')
-                ->join('asignacion_rols', 'users.id', '=', 'asignacion_rols.idUsuario')
-                ->select(
-                        'users.id',
-                        'users.name',
-                        'users.surname',
-                        'users.email',
-                        'asignacion_rols.rol',
-                )
-                ->get();
+        // $usuarios = DB::table('users')
+        //         ->join('asignacion_rols', 'users.id', '=', 'asignacion_rols.idUsuario')
+        //         ->select(
+        //                 'users.id',
+        //                 'users.name',
+        //                 'users.surname',
+        //                 'users.email',
+        //                 'asignacion_rols.rol',
+        //         )
+        //         ->get();
+        $usuarios = User::where("status",1)->get();
 
         return response()->json([
                     'listaUsuarios' => ($usuarios)
@@ -198,10 +199,10 @@ class Usuarios extends Controller {
 ////            //move image to public/img folder
 ////            $file->move(public_path('img'), $picture);
 //
-//            
-//            $image = $request->file('image'); //image file from frontend 
+//
+//            $image = $request->file('image'); //image file from frontend
 //            $name = date('Ymd');
-//            $firebase_storage_path = '';  
+//            $firebase_storage_path = '';
 //            $localfolder = public_path('firebase-temp-uploads') . '/';
 //            $extension = $image->getClientOriginalExtension();
 //            $file = $name . '.' . $extension;
@@ -209,15 +210,15 @@ class Usuarios extends Controller {
 //                $uploadedfile = fopen($localfolder . $file, 'r');
 //                //Linea importante el resto esta de relleno y testing
 //                app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file,"metadata" => [  "contentType"=> 'image/png']]);
-//                //will remove from local laravel folder  
+//                //will remove from local laravel folder
 //                unlink($localfolder . $file);
 //                $url = "https://firebasestorage.googleapis.com/v0/b/carshare-vdg.appspot.com/o/".$file."?alt=media";
-//                
+//
 //                // Actualizamos la url para el usuario
 //                $user = User::find($request->id);
 //                $user->avatar = $url;
 //                $user->save();
-//                
+//
 //                return response()->json(["message" => "Image Uploaded Succesfully"],200);
 //            } else {
 //               return response()->json(["message" => "Sigue sin ir"],400);
@@ -226,7 +227,7 @@ class Usuarios extends Controller {
 //            return response()->json(["message" => "Select image first."],200);
 //        }
 //    }
-    
+
     public function modify(Request $request) {
         if ($user = User::find($request->id)) {
             //Modificamos sus campos normales
@@ -255,12 +256,12 @@ class Usuarios extends Controller {
                 $user->email = $request->email;
                 $user->password = bcrypt($request->password);
             }
-            
+
             //Modificamos su icono
 //            if ($request->hasFile('image')) {
-//                $image = $request->file('image'); //image file from frontend 
+//                $image = $request->file('image'); //image file from frontend
 //                $name = date('Ymd');
-//                $firebase_storage_path = '';  
+//                $firebase_storage_path = '';
 //                $localfolder = public_path('firebase-temp-uploads') . '/';
 //                $extension = $image->getClientOriginalExtension();
 //                $file = $name . '.' . $extension;
@@ -268,7 +269,7 @@ class Usuarios extends Controller {
 //                    $uploadedfile = fopen($localfolder . $file, 'r');
 //                    //Linea importante el resto esta de relleno y testing
 //                    app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file,"metadata" => [  "contentType"=> 'image/png']]);
-//                    //will remove from local laravel folder  
+//                    //will remove from local laravel folder
 //                    unlink($localfolder . $file);
 //                    $url = "https://firebasestorage.googleapis.com/v0/b/carshare-vdg.appspot.com/o/".$file."?alt=media";
 //
