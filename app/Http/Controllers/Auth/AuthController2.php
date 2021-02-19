@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\AsignacionRol;
+use App\Models\Rol;
 use Carbon\Carbon;
 use App\Mail\RecuperarContraseña;
 use App\Mail\Verificar;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 
 class AuthController2 extends Controller
 {
@@ -89,6 +92,10 @@ class AuthController2 extends Controller
         ]);
     }
 
+    public function prueba(Request $request){
+        $rol = AsignacionRol::with(["roles","users"])->first();
+    }
+
     public function login(Request $request){
         $loginData = $request->validate([
             'email' => 'email|required',
@@ -108,15 +115,21 @@ class AuthController2 extends Controller
         //return response(['user' => auth()->user(), 'access_token' => $accessToken]);
 //        return response()->json(['message' => ['user' => auth()->user(), 'access_token' => $accessToken], 'code' => 200], 200);
 
-        return response()->json([
+        $rol = AsignacionRol::with("roles","users")
+            ->where('idUsuario',$user->id)
+            ->first();
+
+        $return = [
             'message' => 'Login correcto',
             'id' => $user->id,
             'name' => $user->name,
             'surname' => $user->surname,
             'email' => $user->email,
-            'avatar' => $user->avatar,
             'access_token' => $accessToken
-        ], 200);
+            'avatar' => $user->avatar,
+            'rol' => $rol->roles->id,
+        ];
+        return response()->json($return, 200);
     }
     
     public function forget(Request $request) {
