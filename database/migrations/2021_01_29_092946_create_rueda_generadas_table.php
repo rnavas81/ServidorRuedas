@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAsignacionRolsTable extends Migration
+class CreateRuedaGeneradasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreateAsignacionRolsTable extends Migration
      */
     public function up()
     {
-        Schema::create('asignacion_rols', function (Blueprint $table) {
+        Schema::create('rueda_generadas', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('idUsuario');
-            $table->tinyInteger('rol');
+            $table->integer("id_rueda");
+            $table->tinyInteger("dia");
+            $table->string("hora");
+            $table->tinyInteger("tipo");
+            $table->text('coches');
         });
     }
 
@@ -28,6 +31,6 @@ class CreateAsignacionRolsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asignacion_rols');
+        Schema::dropIfExists('rueda_generadas');
     }
 }

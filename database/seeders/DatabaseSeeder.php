@@ -21,7 +21,32 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt("Chubaca2020"),
 
         ]);
-        \App\Models\User::factory(10)->create();
+        for ($i=0; $i < 10; $i++) {
+            \App\Models\User::create([
+                'name'     => "user$i",
+                'surname'  => '',
+                'email'    => "mail$i@nomail.com",
+                'password' => bcrypt("123"),
+
+            ]);
+        }
+
+        \App\Models\Rol::create([
+            "rol"=>"Adminsitrador"
+        ]);
+        \App\Models\Rol::create([
+            "rol"=>"Usuario"
+        ]);
+        \App\Models\AsignacionRol::create([
+            'idUsuario'=>1,
+            'rol'=>1,
+        ]);
+        for ($i=2; $i <= 10; $i++) {
+            \App\Models\AsignacionRol::create([
+                'idUsuario'=>$i,
+                'rol'=>$i<5?1:2,
+            ]);
+        }
 
         // Crea una rueda de prueba
         \App\Models\Rueda::create([
