@@ -27,7 +27,7 @@ class Usuarios extends Controller {
      */
     public function unirseRueda(Request $params) {
         $idUsuario = $params->get("idUser");
-        $idRueda = $params->get("id_rueda");
+        $idRueda = $params->get("idRueda");
         $horario = $params->get("horario");
         // Borra los posibles viajes del usuario para esa rueda
         \DB::select("DELETE FROM ruedas_viajes_users WHERE id_usuario='" . $idUsuario . "' AND id_rueda_viaje IN (SELECT id FROM ruedas_viajes WHERE ruedas_viajes.id_rueda='" . $idRueda . "')");
@@ -42,7 +42,8 @@ class Usuarios extends Controller {
             }
         }
 
-        app('App\Http\Controllers\Api\Ruedas')->generateRueda($id);
+        app('App\Http\Controllers\Api\Ruedas')->generateRueda($idRueda);
+
         return response()->json([
                     'message' => 'Ok',
                         ], 201);
@@ -50,8 +51,7 @@ class Usuarios extends Controller {
 
     public function comprobarEstado(Request $params) {
         $id = $params->get('idUser');
-        $user = User::with('ruedas')->where("id", $id)->first();
-//        dd(count($user->ruedas));
+        $user = User::with('ruedas')->where("id",$id)->first();
         return response()->json([
                     'registered' => count($user->ruedas) > 0
                         ], 200);

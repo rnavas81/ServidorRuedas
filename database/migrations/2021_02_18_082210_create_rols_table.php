@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRuedaGeneradasTable extends Migration
+class CreateRolsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,10 @@ class CreateRuedaGeneradasTable extends Migration
      */
     public function up()
     {
-        Schema::create('rueda_generadas', function (Blueprint $table) {
+        Schema::create('rols', function (Blueprint $table) {
             $table->id();
+            $table->string('rol');
             $table->timestamps();
-            $table->integer("id_rueda");
-            $table->tinyInteger("dia");
-            $table->string("hora");
-            $table->tinyInteger("tipo");
-            $table->text('coches');
         });
     }
 
@@ -31,6 +27,6 @@ class CreateRuedaGeneradasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rueda_generadas');
+        Schema::dropIfExists('rols');
     }
 }
