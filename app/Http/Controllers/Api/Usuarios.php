@@ -257,27 +257,28 @@ class Usuarios extends Controller {
             }
             
             //Modificamos su icono
-            if ($request->hasFile('image')) {
-                $image = $request->file('image'); //image file from frontend 
-                $name = date('Ymd');
-                $firebase_storage_path = '';  
-                $localfolder = public_path('firebase-temp-uploads') . '/';
-                $extension = $image->getClientOriginalExtension();
-                $file = $name . '.' . $extension;
-                if ($image->move($localfolder, $file)) {
-                    $uploadedfile = fopen($localfolder . $file, 'r');
-                    //Linea importante el resto esta de relleno y testing
-                    app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file,"metadata" => [  "contentType"=> 'image/png']]);
-                    //will remove from local laravel folder  
-                    unlink($localfolder . $file);
-                    $url = "https://firebasestorage.googleapis.com/v0/b/carshare-vdg.appspot.com/o/".$file."?alt=media";
-
-                    // Actualizamos la url para el usuario
-                    $user->avatar = $url;
-                }
-            }else{
-                $url = $user->avatar;
-            }
+//            if ($request->hasFile('image')) {
+//                $image = $request->file('image'); //image file from frontend 
+//                $name = date('Ymd');
+//                $firebase_storage_path = '';  
+//                $localfolder = public_path('firebase-temp-uploads') . '/';
+//                $extension = $image->getClientOriginalExtension();
+//                $file = $name . '.' . $extension;
+//                if ($image->move($localfolder, $file)) {
+//                    $uploadedfile = fopen($localfolder . $file, 'r');
+//                    //Linea importante el resto esta de relleno y testing
+//                    app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file,"metadata" => [  "contentType"=> 'image/png']]);
+//                    //will remove from local laravel folder  
+//                    unlink($localfolder . $file);
+//                    $url = "https://firebasestorage.googleapis.com/v0/b/carshare-vdg.appspot.com/o/".$file."?alt=media";
+//
+//                    // Actualizamos la url para el usuario
+//                    $user->avatar = $url;
+//                }
+//            }else{
+//                $url = $user->avatar;
+//            }
+            $url = $user->avatar;
             $user->save();
             return response()->json([
                     'mensaje' => 'Modificación exitosa',
