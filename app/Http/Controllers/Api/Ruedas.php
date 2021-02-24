@@ -16,6 +16,14 @@ class Ruedas extends Controller {
         "viajeros"=>[],
     ];
     /**
+     * Recupera todas las ruedas
+     */
+    public function getAll() {
+        $ruedas = Rueda::get();
+        return response()->json($ruedas,200);
+    }
+
+    /**
      * Recupera los datos básicos y los viajes de una rueda
      * @param Integer $id Identificador de la rueda
      */
@@ -633,4 +641,20 @@ class Ruedas extends Controller {
         echo "</td>";
     }
 
+
+    public function addRueda(Request $params){
+        dd($params->nombre);
+        // \App\Models\Rueda::create([
+        //     "nombre"=>$params,
+        //     "descripcion"=>"Las viajes de ida salen 30 minutos antes",
+        //     "origen"=>"Ciudad Real",
+        //     "destino"=>"IFP Virgen de Gracia"
+        // ]);
+    }
+    public function updateRueda(Request $params){
+
+    }
+    public function deleteRueda(Request $params){
+
+    }
 }

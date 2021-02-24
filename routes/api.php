@@ -22,17 +22,20 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/test',function (Request $params){
     return redirect('https://www.google.es');
 });
-//Ruedas
+//Usuario
 Route::post('/usuario/unirse',[App\Http\Controllers\Api\Usuarios::class,'unirseRueda']);
 Route::post('/usuario/estado',[App\Http\Controllers\Api\Usuarios::class,'comprobarEstado']);
 Route::post('/usuario/edit',[App\Http\Controllers\Api\Usuarios::class,'edit']);
 Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
 Route::post('/usuario/img',[App\Http\Controllers\Api\Usuarios::class,'upImg']);
-//Usuario
-Route::get('/rueda',[App\Http\Controllers\Api\Ruedas::class,'getRueda']);
+//Ruedas
+Route::get('/rueda',[App\Http\Controllers\Api\Ruedas::class,'getAll']);
 Route::get('/rueda/{id}',[App\Http\Controllers\Api\Ruedas::class,'getRueda']);
 Route::get('/rueda/generar',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
 Route::get('/rueda/generar/{id}',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
+Route::post('/rueda',[App\Http\Controllers\Api\Ruedas::class,'addRueda']);
+Route::put('/rueda',[App\Http\Controllers\Api\Ruedas::class,'updateRueda']);
+Route::delete('/rueda',[App\Http\Controllers\Api\Ruedas::class,'deleteRueda']);
 
 Route::get('/check/{clave}',[App\Http\Controllers\Auth\AuthController2::class,'check']);
 
