@@ -30,7 +30,7 @@ class Usuarios extends Controller {
         $idRueda = $params->get("idRueda");
         $horario = $params->get("horario");
         // Borra los posibles viajes del usuario para esa rueda
-        \DB::select("DELETE FROM ruedas_viajes_users WHERE id_usuario='" . $idUsuario . "' AND id_rueda_viaje IN (SELECT id FROM ruedas_viajes WHERE ruedas_viajes.id_rueda='" . $idRueda . "')");
+        \DB::select("DELETE FROM ruedas_viajes_users WHERE id_usuario='" . $idUsuario . "';");
         // Agrega los viajes
         foreach ($horario as $item) {
             foreach ($item as $id) {
@@ -41,11 +41,13 @@ class Usuarios extends Controller {
                 ]);
             }
         }
+        User::where("id",$idUsuario)->update(["rueda"=>$idRueda]);
 
         app('App\Http\Controllers\Api\Ruedas')->generateRueda($idRueda);
 
         return response()->json([
                     'message' => 'Ok',
+                    'data'=>User::where("id",$idUsuario)->first(),
                         ], 201);
     }
 
@@ -96,18 +98,7 @@ class Usuarios extends Controller {
     }
 
     public function getUsers() {
-        // $usuarios = DB::table('users')
-        //         ->join('asignacion_rols', 'users.id', '=', 'asignacion_rols.idUsuario')
-        //         ->select(
-        //                 'users.id',
-        //                 'users.name',
-        //                 'users.surname',
-        //                 'users.email',
-        //                 'asignacion_rols.rol',
-        //         )
-        //         ->get();
         $usuarios = User::where("status",1)->get();
-
         return response()->json([
                     'listaUsuarios' => ($usuarios)
                         ], 200);

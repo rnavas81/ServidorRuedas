@@ -71,6 +71,8 @@ class DatabaseSeeder extends Seeder
         $usuarios = \App\Models\User::get();
         $viajes = \App\Models\Rueda_viaje::get();
         foreach($usuarios AS $usuario){
+            $usuario->rueda=1;
+            $usuario->save();
             for ($i=1; $i <= 10; $i++) {
                 $min = $i*3-2;
                 $max = $i*3;
@@ -82,6 +84,8 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+        $date = date('Y-m-d H:i:s');
+        $usuarios->each->update(['rueda'=>1,'status'=>1,'email_verified_at'=>$date]);
         // Genera la rueda
         app("\App\Http\Controllers\Api\Ruedas")->generateRueda(1);
 
