@@ -35,7 +35,7 @@ Route::get('/rueda/generar',[App\Http\Controllers\Api\Ruedas::class,'generateRue
 Route::get('/rueda/generar/{id}',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
 Route::post('/rueda',[App\Http\Controllers\Api\Ruedas::class,'addRueda']);
 Route::put('/rueda',[App\Http\Controllers\Api\Ruedas::class,'updateRueda']);
-Route::delete('/rueda',[App\Http\Controllers\Api\Ruedas::class,'deleteRueda']);
+Route::delete('/rueda/{id}',[App\Http\Controllers\Api\Ruedas::class,'deleteRueda']);
 
 Route::get('/check/{clave}',[App\Http\Controllers\Auth\AuthController2::class,'check']);
 

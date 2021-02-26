@@ -132,6 +132,7 @@ class AuthController2 extends Controller
             'access_token' => $accessToken,
             'avatar' => $user->avatar,
             'rol' => $rol->roles->id,
+            'rueda' => $user->rueda,
         ];
         return response()->json($return, 200);
     }
