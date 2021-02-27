@@ -19,12 +19,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 // Rutas Publicas
 //Ruta de prueba
-Route::get('/test',function (Request $params){
-    return redirect('https://www.google.es');
+Route::get('/test0',function (Request $params){
+    return true;
 });
 //Usuario
-Route::post('/usuario/unirse',[App\Http\Controllers\Api\Usuarios::class,'unirseRueda']);
-Route::post('/usuario/estado',[App\Http\Controllers\Api\Usuarios::class,'comprobarEstado']);
+
+
 Route::post('/usuario/edit',[App\Http\Controllers\Api\Usuarios::class,'edit']);
 Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
 Route::post('/usuario/img',[App\Http\Controllers\Api\Usuarios::class,'upImg']);
@@ -52,3 +52,29 @@ Route::post('/administrador/createUser', [App\Http\Controllers\Api\Usuarios::cla
 Route::get('/administrador/getUsers', [App\Http\Controllers\Api\Usuarios::class, 'getUsers']);
 Route::post('/administrador/editUser', [App\Http\Controllers\Api\Usuarios::class, 'editUser']);
 Route::post('/administrador/deleteUser', [App\Http\Controllers\Api\Usuarios::class, 'deleteUser']);
+
+// Rutas utilizando passport
+Route::group([], function () {
+//    Route::post('login', 'AuthController@login');
+//    Route::post('signup', 'AuthController@signUp');
+    Route::get('/test',function (Request $params){
+        return true;
+    });
+    Route::group([
+      'middleware' => 'auth:api'
+    ], function() {
+//        Route::get('logout', 'AuthController@logout');
+        Route::get('/test1',function (Request $params){
+            return true;
+        });
+        
+        
+        //  RUTAS 
+        //  Para unirte a una rueda
+        Route::post('/usuario/unirse',[App\Http\Controllers\Api\Usuarios::class,'unirseRueda']);
+        //  Para comprobar el estado del usuario
+        Route::post('/usuario/estado',[App\Http\Controllers\Api\Usuarios::class,'comprobarEstado']);
+        //  Para modificar sus valores
+        Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
+    });
+});

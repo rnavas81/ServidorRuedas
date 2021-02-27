@@ -220,6 +220,7 @@ class Usuarios extends Controller {
 //    }
 
     public function modify(Request $request) {
+        return $request;
         if ($user = User::find($request->id)) {
             //Modificamos sus campos normales
             if ($request->password == null) {
