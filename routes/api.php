@@ -76,5 +76,12 @@ Route::group([], function () {
         Route::post('/usuario/estado',[App\Http\Controllers\Api\Usuarios::class,'comprobarEstado']);
         //  Para modificar sus valores
         Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
+        // Para comprobar que el usuario esta logeado
+        Route::post('/usuario/test',function (Request $params){
+            return response()->json([
+                    'message' => 'Ok'
+                        ], 200);
+        });
+        Route::post('/usuario/testRol',[App\Http\Controllers\Api\Usuarios::class,'user']);
     });
 });

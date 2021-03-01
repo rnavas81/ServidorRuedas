@@ -285,5 +285,16 @@ class Usuarios extends Controller {
                         ], 400);
         }
     }
+    
+    public function user(Request $request)
+    {
+        $user = $request->user();
+        $rol = AsignacionRol::with("roles","users")
+            ->where('idUsuario',$user->id)
+            ->first();
+        return response()->json([
+            'rol' => $rol->roles->id,
+        ], 200);
+    }
 
 }
