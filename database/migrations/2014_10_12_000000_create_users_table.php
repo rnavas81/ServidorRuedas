@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('avatar')->default('');
             $table->tinyInteger('status')->default(0);
+            $table->integer('rueda')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -17,6 +17,7 @@ RUN apt-get --yes update && apt-get --yes upgrade && apt --yes autoremove && apt
     a2enmod headers  &&\
     a2enmod rewrite  &&\
     service apache2 restart  &&\
+    apt install curl &&\
     # Limpia los residuos de las instalaciones
     apt-get clean
 
