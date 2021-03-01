@@ -67,6 +67,7 @@ class Usuarios extends Controller {
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
+        $user->status = 1;
         if ($user->save()) {
             $response = response()->json([
                 'message' => 'Creacion satisfactoria',
