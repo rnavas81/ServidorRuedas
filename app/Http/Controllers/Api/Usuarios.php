@@ -67,6 +67,7 @@ class Usuarios extends Controller {
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
+        $user->status = 1;
         if ($user->save()) {
             $response = response()->json([
                 'message' => 'Creacion satisfactoria',
@@ -220,6 +221,7 @@ class Usuarios extends Controller {
 //    }
 
     public function modify(Request $request) {
+        return $request;
         if ($user = User::find($request->id)) {
             //Modificamos sus campos normales
             if ($request->password == null) {
@@ -275,7 +277,7 @@ class Usuarios extends Controller {
             return response()->json([
                     'mensaje' => 'Modificación exitosa',
                     'status' => 200,
-                    'url' => $url
+                    'avatar' => $url
                         ], 200);
         }else{
             return response()->json([
@@ -283,6 +285,17 @@ class Usuarios extends Controller {
                     'status' => 400
                         ], 400);
         }
+    }
+    
+    public function user(Request $request)
+    {
+        $user = $request->user();
+        $rol = AsignacionRol::with("roles","users")
+            ->where('idUsuario',$user->id)
+            ->first();
+        return response()->json([
+            'rol' => $rol->roles->id,
+        ], 200);
     }
 
 }
