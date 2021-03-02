@@ -80,8 +80,12 @@ Route::group([], function () {
                     'message' => 'Ok'
                         ], 200);
         });
+        
         // Para comprobar el rol del usuario
         Route::post('/usuario/testRol',[App\Http\Controllers\Api\Usuarios::class,'user']);
+        
+        // Para hacer el logout
+        Route::post('/logout', [App\Http\Controllers\Auth\AuthController2::class, 'logout'])->name('logout');
         
         // Para obtener la rueda
         Route::get('/rueda/generada/{id}', [App\Http\Controllers\Api\Ruedas::class, 'getRuedaGenerada']);

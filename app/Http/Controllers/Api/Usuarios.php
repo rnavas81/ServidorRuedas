@@ -277,7 +277,7 @@ class Usuarios extends Controller {
             return response()->json([
                     'mensaje' => 'Modificación exitosa',
                     'status' => 200,
-                    'url' => $url
+                    'avatar' => $url
                         ], 200);
         }else{
             return response()->json([
