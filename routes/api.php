@@ -24,21 +24,19 @@ Route::get('/test0',function (Request $params){
 });
 //Usuario
 
-
+// Primera version de editar perfil
 Route::post('/usuario/edit',[App\Http\Controllers\Api\Usuarios::class,'edit']);
-Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
-Route::post('/usuario/img',[App\Http\Controllers\Api\Usuarios::class,'upImg']);
-//Ruedas
-Route::get('/rueda',[App\Http\Controllers\Api\Ruedas::class,'getAll']);
-Route::get('/rueda/{id}',[App\Http\Controllers\Api\Ruedas::class,'getRueda']);
-Route::get('/rueda/generar',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
-Route::get('/rueda/generar/{id}',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
-Route::post('/rueda',[App\Http\Controllers\Api\Ruedas::class,'addRueda']);
-Route::put('/rueda',[App\Http\Controllers\Api\Ruedas::class,'updateRueda']);
-Route::delete('/rueda/{id}',[App\Http\Controllers\Api\Ruedas::class,'deleteRueda']);
 
+// Ruta con problema con passport
+Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
+
+// Ruta de prueba solo para el examen
+Route::post('/usuario/img',[App\Http\Controllers\Api\Usuarios::class,'upImg']);
+
+// Ruta validacion de email
 Route::get('/check/{clave}',[App\Http\Controllers\Auth\AuthController2::class,'check']);
 
+// rutas formularios iniciales
 Route::post('/signup', [App\Http\Controllers\Auth\AuthController2::class, 'signup'])->name('signup');
 Route::post('/login', [App\Http\Controllers\Auth\AuthController2::class, 'login'])->name('login');
 Route::post('/forget', [App\Http\Controllers\Auth\AuthController2::class, 'forget'])->name('forget');
@@ -60,7 +58,7 @@ Route::group([], function () {
     Route::group([
       'middleware' => 'auth:api'
     ], function() {
-//        Route::get('logout', 'AuthController@logout');
+//      Route::get('logout', 'AuthController@logout');
         Route::get('/test1',function (Request $params){
             return true;
         });
@@ -69,10 +67,13 @@ Route::group([], function () {
         //  RUTAS 
         //  Para unirte a una rueda
         Route::post('/usuario/unirse',[App\Http\Controllers\Api\Usuarios::class,'unirseRueda']);
+        
         //  Para comprobar el estado del usuario
         Route::post('/usuario/estado',[App\Http\Controllers\Api\Usuarios::class,'comprobarEstado']);
+        
         //  Para modificar sus valores
         Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
+        
         // Para comprobar que el usuario esta logeado
         Route::post('/usuario/test',function (Request $params){
             return response()->json([
@@ -81,12 +82,30 @@ Route::group([], function () {
         });
         // Para comprobar el rol del usuario
         Route::post('/usuario/testRol',[App\Http\Controllers\Api\Usuarios::class,'user']);
+        
         // Para obtener la rueda
         Route::get('/rueda/generada/{id}', [App\Http\Controllers\Api\Ruedas::class, 'getRuedaGenerada']);
+        
         // Rutas adminstracion
-        Route::post('/administrador/createUser', [App\Http\Controllers\Api\Usuarios::class, 'crearUsuario']);
-        Route::get('/administrador/getUsers', [App\Http\Controllers\Api\Usuarios::class, 'getUsers']);
-        Route::post('/administrador/editUser', [App\Http\Controllers\Api\Usuarios::class, 'editUser']);
-        Route::post('/administrador/deleteUser', [App\Http\Controllers\Api\Usuarios::class, 'deleteUser']);
+        Route::group([
+            'middleware' => 'rolMidd:api'
+        ], function (){
+            // Administracion de usuarios
+            Route::post('/administrador/createUser', [App\Http\Controllers\Api\Usuarios::class, 'crearUsuario']);
+            Route::get('/administrador/getUsers', [App\Http\Controllers\Api\Usuarios::class, 'getUsers']);
+            Route::post('/administrador/editUser', [App\Http\Controllers\Api\Usuarios::class, 'editUser']);
+            Route::post('/administrador/deleteUser', [App\Http\Controllers\Api\Usuarios::class, 'deleteUser']);
+        });
+       
+        
+        //Ruedas
+        Route::get('/rueda',[App\Http\Controllers\Api\Ruedas::class,'getAll']);
+        Route::get('/rueda/{id}',[App\Http\Controllers\Api\Ruedas::class,'getRueda']);
+        Route::get('/rueda/generar',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
+        Route::get('/rueda/generar/{id}',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
+        Route::post('/rueda',[App\Http\Controllers\Api\Ruedas::class,'addRueda']);
+        Route::put('/rueda',[App\Http\Controllers\Api\Ruedas::class,'updateRueda']);
+        Route::delete('/rueda/{id}',[App\Http\Controllers\Api\Ruedas::class,'deleteRueda']);
+        Route::get('/rueda/generada', [App\Http\Controllers\Api\Ruedas::class, 'getRuedaGenerada']);
     });
 });
