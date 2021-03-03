@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Rueda;
 use App\Models\Rueda_viajes_usuario;
 use App\Models\RuedaGenerada;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Mail\RuedaRehecha;
+use Illuminate\Support\Facades\Mail;
 
 class Ruedas extends Controller {
     private $condiciones=[
@@ -598,12 +601,23 @@ class Ruedas extends Controller {
             }
         }
 
+        // Funcion para notificar a los usuarios
+        function notificarUsuarios($id){
+            $users = User::where("rueda",$id)->get();
+            foreach ($users as $user) {
+                $url = env('APP_ROUTE');
+                Mail::to($user->email)->send(new RuedaRehecha($user->name, $user->surname, $url));
+            }
+        }
+
         // Elimina los posibles datos existentes de la rueda
         RuedaGenerada::where("id_rueda",$idRueda)->delete();
         foreach ($rueda as $dia => $viajes) {
             guardarViaje($idRueda,$dia,1,$viajes["ida"]);
             guardarViaje($idRueda,$dia,2,$viajes["vuelta"]);
         }
+        
+        notificarUsuarios($idRueda);
     }
 
     /**
