@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +20,23 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 // Rutas Publicas
 //Ruta de prueba
-Route::get('/test0',function (Request $params){
-    return true;
+Route::post('/test0',function (Request $params){
+    
+    
+    
+    Storage::disk('dropbox')->putFileAs(
+        '/', 
+        $params->file('img'), 
+        $params->file('img')->getClientOriginalName()
+    );
+    
+    $dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();
+    
+    $response = $dropbox->createSharedLinkWithSettings(
+            $params->file('img')->getClientOriginalName(), 
+            ["requested_visibility" => "public"]
+        );
+    $url = str_replace('dl=0', 'raw=1', $response['url']);
 });
 //Usuario
 
@@ -46,8 +62,7 @@ Route::post('/forget', [App\Http\Controllers\Auth\AuthController2::class, 'forge
 Route::get('/rueda/generada', [App\Http\Controllers\Api\Ruedas::class, 'getRuedaGenerada']);
 
 
-
-
+ Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
 // Rutas utilizando passport
 Route::group([], function () {
 //    Route::post('login', 'AuthController@login');
@@ -72,7 +87,7 @@ Route::group([], function () {
         Route::post('/usuario/estado',[App\Http\Controllers\Api\Usuarios::class,'comprobarEstado']);
         
         //  Para modificar sus valores
-        Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
+       
         
         // Para comprobar que el usuario esta logeado
         Route::post('/usuario/test',function (Request $params){

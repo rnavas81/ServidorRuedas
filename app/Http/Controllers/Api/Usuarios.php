@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\AsignacionRol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 // use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class Usuarios extends Controller {
@@ -221,7 +222,7 @@ class Usuarios extends Controller {
 //    }
 
     public function modify(Request $request) {
-        return $request;
+        
         if ($user = User::find($request->id)) {
             //Modificamos sus campos normales
             if ($request->password == null) {
@@ -272,7 +273,24 @@ class Usuarios extends Controller {
 //            }else{
 //                $url = $user->avatar;
 //            }
-            $url = $user->avatar;
+            
+            if ($request->hasFile('image')) {
+                Storage::disk('dropbox')->putFileAs(
+                        '/',
+                        $request->file('image'),
+                        $request->file('image')->getClientOriginalName()
+                );
+
+                $dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();
+
+                $response = $dropbox->createSharedLinkWithSettings(
+                        $request->file('image')->getClientOriginalName(),
+                        ["requested_visibility" => "public"]
+                );
+                $url = str_replace('dl=0', 'raw=1', $response['url']);
+                $user->avatar = $url;
+            }
+            
             $user->save();
             return response()->json([
                     'mensaje' => 'Modificación exitosa',
