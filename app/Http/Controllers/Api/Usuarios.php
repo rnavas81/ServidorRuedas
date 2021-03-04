@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\AsignacionRol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
 // use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class Usuarios extends Controller {
@@ -221,7 +223,7 @@ class Usuarios extends Controller {
 //    }
 
     public function modify(Request $request) {
-        return $request;
+        
         if ($user = User::find($request->id)) {
             //Modificamos sus campos normales
             if ($request->password == null) {
@@ -272,7 +274,35 @@ class Usuarios extends Controller {
 //            }else{
 //                $url = $user->avatar;
 //            }
-            $url = $user->avatar;
+            
+            if ($request->hasFile('image')) {
+                
+                $dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();
+                
+                $oldName = $user->file;
+                if ($user->file != '' ) {
+                    $dropbox->delete($user->file);
+                }
+                
+                $name = Crypt::encrypt($user->id);
+                $name = substr($name, 9, 12);
+                $name = $name .'.'. $request->file('image')->getClientOriginalExtension();  
+                
+                Storage::disk('dropbox')->putFileAs(
+                        '/',
+                        $request->file('image'),
+                        $name
+                );
+
+                $response = $dropbox->createSharedLinkWithSettings(
+                        $name,
+                        ["requested_visibility" => "public"]
+                );
+                $url = str_replace('dl=0', 'raw=1', $response['url']);
+                $user->avatar = $url;
+                $user->file = $name;
+            }
+            
             $user->save();
             return response()->json([
                     'mensaje' => 'Modificación exitosa',
