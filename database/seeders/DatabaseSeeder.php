@@ -76,11 +76,15 @@ class DatabaseSeeder extends Seeder
             for ($i=1; $i <= 10; $i++) {
                 $min = $i*3-2;
                 $max = $i*3;
+                $reglas = ['irSolo'=>rand(0,100)<90?0:1];
+                if($reglas['irSolo']==0){
+                    $reglas['plazas']=rand(3,5);
+                }
                 $idViaje = rand($min,$max);
                 \App\Models\Rueda_viajes_usuario::create([
                     "id_rueda_viaje"=>$idViaje,
                     "id_usuario"=>$usuario->id,
-                    "reglas"=>'{"irSolo":0,"plazas":4}'
+                    "reglas"=>json_encode($reglas),
                 ]);
             }
         }
