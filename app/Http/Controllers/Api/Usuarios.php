@@ -9,6 +9,7 @@ use App\Models\AsignacionRol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
 // use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class Usuarios extends Controller {
@@ -275,20 +276,31 @@ class Usuarios extends Controller {
 //            }
             
             if ($request->hasFile('image')) {
+                
+                $dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();
+                
+                $oldName = $user->file;
+                if ($user->file != '' ) {
+                    $dropbox->delete($user->file);
+                }
+                
+                $name = Crypt::encrypt($user->id);
+                $name = substr($name, 9, 12);
+                $name = $name .'.'. $request->file('image')->getClientOriginalExtension();  
+                
                 Storage::disk('dropbox')->putFileAs(
                         '/',
                         $request->file('image'),
-                        $request->file('image')->getClientOriginalName()
+                        $name
                 );
 
-                $dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();
-
                 $response = $dropbox->createSharedLinkWithSettings(
-                        $request->file('image')->getClientOriginalName(),
+                        $name,
                         ["requested_visibility" => "public"]
                 );
                 $url = str_replace('dl=0', 'raw=1', $response['url']);
                 $user->avatar = $url;
+                $user->file = $name;
             }
             
             $user->save();

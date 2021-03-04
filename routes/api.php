@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,21 +23,25 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //Ruta de prueba
 Route::post('/test0',function (Request $params){
     
-    
+    $name = Crypt::encrypt('test');
+    $name = substr($name, 9, 12);
+    $name = $name .'.'. $params->file('img')->getClientOriginalExtension();
     
     Storage::disk('dropbox')->putFileAs(
         '/', 
         $params->file('img'), 
-        $params->file('img')->getClientOriginalName()
+        $name
     );
     
     $dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();
     
     $response = $dropbox->createSharedLinkWithSettings(
-            $params->file('img')->getClientOriginalName(), 
+            $name, 
             ["requested_visibility" => "public"]
         );
     $url = str_replace('dl=0', 'raw=1', $response['url']);
+    
+    return $url;
 });
 //Usuario
 
