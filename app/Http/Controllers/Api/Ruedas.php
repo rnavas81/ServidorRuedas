@@ -84,6 +84,7 @@ class Ruedas extends Controller {
         if($datos["haycoincidencia"]==0){
             $this->condiciones['max']=count($dias);
         }
+        // $this->pintarTabla($semana);exit;
         // if(count($this->condiciones['viajeros'])<count($dias)){
         //     dd($this->condiciones);
         //     $this->condiciones['max']=
@@ -92,14 +93,14 @@ class Ruedas extends Controller {
             $exito = $this->generarCuadrante($semana,$dias,$horas,0,0,$p);
             if(!$exito){
                 //Prueba el siguiente viajero de la primera hora
-                if($this->condiciones["max"]<intdiv(count($this->condiciones["viajeros"]),2)) {
-                    // $this->output("Nuevo intento:$p ".$this->condiciones["max"],true);
+                if($this->condiciones["max"]<count($dias)) {
+                    $this->output("Nuevo intento:$p ".$this->condiciones["max"],true);
                     $p=0;
                     $this->condiciones["max"]++;
                 //Agrega un nuevo coche
                 } else {
                     $coches++;
-                    // $this->output("Agrega coche:$p ".$this->condiciones["max"]." $coches",true);
+                    $this->output("Agrega coche:$p ".$this->condiciones["max"]." $coches",true);
                     $this->agregarCocheSemana($semana);
                     $this->condiciones["max"]=1;
                     $p=0;
@@ -120,6 +121,7 @@ class Ruedas extends Controller {
         $max=0;
         foreach($semana AS $diaKey=>$dia){
             foreach ($dia["ida"]["horas"] as $hora => $viaje) {
+                if(count($viaje['viajeros']) ==  count($viaje['coches'])) continue;
                 try {
                     $avg = count($viaje['viajeros']) / count($viaje['coches']);
                 } catch (\Throwable $th) {
@@ -309,7 +311,7 @@ class Ruedas extends Controller {
                 // Si no hay conductor comprueba si no hay en ese viaje
                 if(!$conductor){
                     if(count($cuadrante[$dias[$dia]]["ida"]["horas"][$horas[$hora]]["viajeros"]) == 0){
-                        // $this->output("NO HAY VIAJEROS");
+                        $this->output("NO HAY VIAJEROS");
                         // if($this->estaDiaCubierto($cuadrante[$dias[$dia]])){
                         if($this->estaDiaCubierto($horas,$hora)){
                             $exito = $this->generarCuadrante($cuadrante,$dias,$horas,$dia+1,0,0);
@@ -328,7 +330,7 @@ class Ruedas extends Controller {
 
                     }
                 }else
-                    // $this->output("[$dia $horas[$hora]] POSICION:$posicion ID:$conductor->id ==> ".implode(",",array_keys($cuadrante[$dias[$dia]]["ida"]["horas"][$horas[$hora]]["viajeros"])),true);
+                    $this->output("[$dia $horas[$hora]] POSICION:$posicion ID:$conductor->id ==> ".implode(",",array_keys($cuadrante[$dias[$dia]]["ida"]["horas"][$horas[$hora]]["viajeros"])),true);
                 // Comprueba si puede ser conductor
                 if ($conductor && $this->puedeSerConductor($cuadrante, $horas[$hora], $dias[$dia], $conductor)) {
                     $this->asignarConductor($cuadrante, $horas[$hora], $dias[$dia], $conductor->id);
@@ -337,7 +339,7 @@ class Ruedas extends Controller {
                         //Si en ese día ya tenemos todos los conductores... pasamos al siguiente día.
                         // if($this->estaDiaCubierto($cuadrante[$dias[$dia]])){
                         if($this->estaDiaCubierto($horas,$hora)){
-                            // $this->output("DIA CUBIERTO");
+                            $this->output("DIA CUBIERTO");
                             $exito = $this->generarCuadrante($cuadrante,$dias,$horas,$dia+1,0,0);
                             if($exito){
                                 $this->asignarPasajeros($cuadrante[$dias[$dia]]);
@@ -346,7 +348,7 @@ class Ruedas extends Controller {
                             }
                         // Si todos los coches están cubiertos pasa a la siguiente hora
                         } else {
-                            // $this->output("COCHES CUBIERTOS");
+                            $this->output("COCHES CUBIERTOS");
                             $exito = $this->generarCuadrante($cuadrante,$dias,$horas,$dia,$hora+1,0);
                             if(!$exito){
                                 $this->cancelarConductor($cuadrante[$dias[$dia]],$conductor->id);
@@ -355,7 +357,7 @@ class Ruedas extends Controller {
                         }
 
                     } else {
-                        // $this->output("QUEDAN COCHES");
+                        $this->output("QUEDAN COCHES");
                         // Si quedan viajeros para asignar se intenta
                         if($this->quedanViajeros($posicion,$cuadrante[$dias[$dia]]["ida"]["horas"][$horas[$hora]])) {
                             //Pasamos al siguiente conductor de los disponibles en esa franja.
@@ -364,7 +366,7 @@ class Ruedas extends Controller {
                                 $this->cancelarConductor($cuadrante[$dias[$dia]],$conductor->id);
                             }
                         } else {
-                            // $this->output(" PERO NO CONDUCTORES");
+                            $this->output(" PERO NO CONDUCTORES");
                             $this->cancelarConductor($cuadrante[$dias[$dia]],$conductor->id);
                             $esImposible = true;
                         }
@@ -412,10 +414,10 @@ class Ruedas extends Controller {
             return false;
         }
         $haConducido = $this->cuantasVecesConduce($id);
-        // $this->output("Conducciones: $haConducido |");
+        $this->output("Conducciones: $haConducido |");
         if($haConducido>=$this->condiciones["max"]) return false;
         $response = $this->puedeSerConductorVuelta($viajes, $conductor->id,count($cuadrante[$dia]["ida"]["horas"][$hora]["viajeros"])==1);
-        // $this->output(" ".($response?"SI":"NO")." puede ser conductor");
+        $this->output(" ".($response?"SI":"NO")." puede ser conductor");
         return $response;
     }
     /**
@@ -487,7 +489,7 @@ class Ruedas extends Controller {
         }
         if(array_key_exists($id,$this->condiciones["conductores"]))$this->condiciones["conductores"][$id]++;
         else $this->condiciones["conductores"][$id]=1;
-        // $this->output(" ||| ASIGNADO ||| ");
+        $this->output(" ||| ASIGNADO ||| ");
         return $correcto1 && $correcto2;
     }
     /**
@@ -536,7 +538,7 @@ class Ruedas extends Controller {
             }
         }
         if(isset($this->condiciones["conductores"][$conductor]))$this->condiciones["conductores"][$conductor]--;
-        // $this->output(" CANCELADO $conductor||");
+        $this->output(" CANCELADO $conductor||");
     }
     /**
      * Asigna los pasajeros para un día completo

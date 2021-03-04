@@ -66,6 +66,7 @@ Route::post('/forget', [App\Http\Controllers\Auth\AuthController2::class, 'forge
 
 Route::get('/rueda/generada', [App\Http\Controllers\Api\Ruedas::class, 'getRuedaGenerada']);
 
+Route::get('/rueda/generar/{id}',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
 
  Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
 // Rutas utilizando passport
@@ -126,7 +127,6 @@ Route::group([], function () {
         Route::get('/rueda',[App\Http\Controllers\Api\Ruedas::class,'getAll']);
         Route::get('/rueda/{id}',[App\Http\Controllers\Api\Ruedas::class,'getRueda']);
         Route::get('/rueda/generar',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
-        Route::get('/rueda/generar/{id}',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
         Route::post('/rueda',[App\Http\Controllers\Api\Ruedas::class,'addRueda']);
         Route::put('/rueda',[App\Http\Controllers\Api\Ruedas::class,'updateRueda']);
         Route::delete('/rueda/{id}',[App\Http\Controllers\Api\Ruedas::class,'deleteRueda']);

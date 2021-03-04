@@ -137,11 +137,12 @@ class Usuarios extends Controller {
     public function deleteUser(Request $request) {
         DB::table('users')
                 ->where('id', $request->id)
-                ->delete();
+                ->update(['status' => 0]);
 
-        DB::table('asignacion_rols')
-                ->where('idUsuario', $request->id)
-                ->delete();
+        app('App\Http\Controllers\Api\Ruedas')->generateRueda($request->rueda);
+        // DB::table('asignacion_rols')
+        //         ->where('idUsuario', $request->id)
+        //         ->delete();
 
         return response()->json([
                     'borrado' => ('OK')
