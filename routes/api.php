@@ -22,25 +22,25 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // Rutas Publicas
 //Ruta de prueba
 Route::post('/test0',function (Request $params){
-    
+
     $name = Crypt::encrypt('test');
     $name = substr($name, 9, 12);
     $name = $name .'.'. $params->file('img')->getClientOriginalExtension();
-    
+
     Storage::disk('dropbox')->putFileAs(
-        '/', 
-        $params->file('img'), 
+        '/',
+        $params->file('img'),
         $name
     );
-    
+
     $dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();
-    
+
     $response = $dropbox->createSharedLinkWithSettings(
-            $name, 
+            $name,
             ["requested_visibility" => "public"]
         );
     $url = str_replace('dl=0', 'raw=1', $response['url']);
-    
+
     return $url;
 });
 //Usuario

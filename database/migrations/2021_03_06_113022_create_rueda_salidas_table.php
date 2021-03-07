@@ -13,9 +13,10 @@ class CreateRuedaSalidasTable extends Migration
      */
     public function up()
     {
-        Schema::create('rueda_salidas', function (Blueprint $table) {
+        Schema::create('ruedas_salidas', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->integer("id_rueda");
+            $table->string("nombre");
         });
     }
 
@@ -26,6 +27,6 @@ class CreateRuedaSalidasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rueda_salidas');
+        Schema::dropIfExists('ruedas_salidas');
     }
 }
