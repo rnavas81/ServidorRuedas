@@ -35,11 +35,11 @@ class Usuarios extends Controller {
         \DB::select("DELETE FROM ruedas_viajes_users WHERE id_usuario='" . $idUsuario . "';");
         // Agrega los viajes
         foreach ($horario as $item) {
-            foreach ($item as $id) {
+            foreach ($item as $viaje){
                 Rueda_viajes_usuario::create([
-                    'id_rueda_viaje' => $id,
-                    'id_usuario' => $idUsuario,
-                    'reglas' => "",
+                    'id_rueda_viaje'=>$viaje['id'],
+                    'id_usuario'=>$idUsuario,
+                    'reglas'=>json_encode($viaje["reglas"]),
                 ]);
             }
         }

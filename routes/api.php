@@ -63,12 +63,6 @@ Route::post('/login', [App\Http\Controllers\Auth\AuthController2::class, 'login'
 Route::post('/forget', [App\Http\Controllers\Auth\AuthController2::class, 'forget'])->name('forget');
 
 
-
-Route::get('/rueda/generada', [App\Http\Controllers\Api\Ruedas::class, 'getRuedaGenerada']);
-
-Route::get('/rueda/generar/{id}',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
-
- Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
 // Rutas utilizando passport
 Route::group([], function () {
 //    Route::post('login', 'AuthController@login');
@@ -83,35 +77,32 @@ Route::group([], function () {
         Route::get('/test1',function (Request $request){
             return $request->user()->id;
         });
-        
-        
-        //  RUTAS 
+
+
+        //  RUTAS
         //  Para unirte a una rueda
         Route::post('/usuario/unirse',[App\Http\Controllers\Api\Usuarios::class,'unirseRueda']);
         //  Para dar de baja tu cuenta
         Route::post('/usuario/deleteAccount', [App\Http\Controllers\Api\Usuarios::class, 'delete']);
         //  Para comprobar el estado del usuario
         Route::post('/usuario/estado',[App\Http\Controllers\Api\Usuarios::class,'comprobarEstado']);
-        
         //  Para modificar sus valores
-       
-        
+        Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
+
         // Para comprobar que el usuario esta logeado
         Route::post('/usuario/test',function (Request $params){
             return response()->json([
                     'message' => 'Ok'
                         ], 200);
         });
-        
+
         // Para comprobar el rol del usuario
         Route::post('/usuario/testRol',[App\Http\Controllers\Api\Usuarios::class,'user']);
-        
+
         // Para hacer el logout
         Route::post('/logout', [App\Http\Controllers\Auth\AuthController2::class, 'logout'])->name('logout');
-        
-        // Para obtener la rueda
-        Route::get('/rueda/generada/{id}', [App\Http\Controllers\Api\Ruedas::class, 'getRuedaGenerada']);
-        
+
+
         // Rutas adminstracion
         Route::group([
             'middleware' => 'rolMidd:api'
@@ -122,15 +113,19 @@ Route::group([], function () {
             Route::post('/administrador/editUser', [App\Http\Controllers\Api\Usuarios::class, 'editUser']);
             Route::post('/administrador/deleteUser', [App\Http\Controllers\Api\Usuarios::class, 'deleteUser']);
         });
-       
-        
+
+
         //Ruedas
         Route::get('/rueda',[App\Http\Controllers\Api\Ruedas::class,'getAll']);
         Route::get('/rueda/{id}',[App\Http\Controllers\Api\Ruedas::class,'getRueda']);
-        Route::get('/rueda/generar',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
         Route::post('/rueda',[App\Http\Controllers\Api\Ruedas::class,'addRueda']);
         Route::put('/rueda',[App\Http\Controllers\Api\Ruedas::class,'updateRueda']);
         Route::delete('/rueda/{id}',[App\Http\Controllers\Api\Ruedas::class,'deleteRueda']);
+        // Para generar la rueda
+        Route::get('/rueda/generar',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
+        Route::get('/rueda/generar/{id}',[App\Http\Controllers\Api\Ruedas::class,'generateRueda']);
+        // Para obtener la rueda
         Route::get('/rueda/generada', [App\Http\Controllers\Api\Ruedas::class, 'getRuedaGenerada']);
+        Route::get('/rueda/generada/{id}', [App\Http\Controllers\Api\Ruedas::class, 'getRuedaGenerada']);
     });
 });
