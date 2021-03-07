@@ -80,15 +80,16 @@ Route::group([], function () {
       'middleware' => 'auth:api'
     ], function() {
 //      Route::get('logout', 'AuthController@logout');
-        Route::get('/test1',function (Request $params){
-            return true;
+        Route::get('/test1',function (Request $request){
+            return $request->user()->id;
         });
         
         
         //  RUTAS 
         //  Para unirte a una rueda
         Route::post('/usuario/unirse',[App\Http\Controllers\Api\Usuarios::class,'unirseRueda']);
-        
+        //  Para dar de baja tu cuenta
+        Route::post('/usuario/deleteAccount', [App\Http\Controllers\Api\Usuarios::class, 'delete']);
         //  Para comprobar el estado del usuario
         Route::post('/usuario/estado',[App\Http\Controllers\Api\Usuarios::class,'comprobarEstado']);
         

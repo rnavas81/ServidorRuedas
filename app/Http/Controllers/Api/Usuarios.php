@@ -148,6 +148,16 @@ class Usuarios extends Controller {
                     'borrado' => ('OK')
                         ], 200);
     }
+    
+    public function delete(Request $request){
+        $user = $request->user();
+        $user->status = 0;
+        $user->save();
+        
+        return response()->json([
+            'borrado' => ('OK')
+        ], 200);
+    }
 
 
     public function edit(Request $request) {
@@ -302,6 +312,8 @@ class Usuarios extends Controller {
                 $url = str_replace('dl=0', 'raw=1', $response['url']);
                 $user->avatar = $url;
                 $user->file = $name;
+            }else{
+                $url = $user->avatar;
             }
             
             $user->save();
