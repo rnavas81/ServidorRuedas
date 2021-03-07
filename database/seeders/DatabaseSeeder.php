@@ -55,6 +55,15 @@ class DatabaseSeeder extends Seeder
             "origen"=>"Ciudad Real",
             "destino"=>"IFP Virgen de Gracia"
         ]);
+        // Crea las salidas
+        \App\Models\Rueda_salidas::create([
+            "id_rueda"=>1,
+            "nombre"=>"Puerta de Toledo"
+        ]);
+        \App\Models\Rueda_salidas::create([
+            "id_rueda"=>1,
+            "nombre"=>"Rotonda del helicoptero"
+        ]);
         // Crea los viajes de la rueda
         $horas = ["08:30","09:25","10:20","12:40","13:35","14:30"];
         for ($i=0; $i < 5; $i++) {
@@ -76,15 +85,12 @@ class DatabaseSeeder extends Seeder
             for ($i=1; $i <= 10; $i++) {
                 $min = $i*3-2;
                 $max = $i*3;
-                $reglas = ['irSolo'=>rand(0,100)<90?0:1];
-                if($reglas['irSolo']==0){
-                    $reglas['plazas']=rand(3,5);
-                }
                 $idViaje = rand($min,$max);
+                $salida = rand(1,2);
                 \App\Models\Rueda_viajes_usuario::create([
                     "id_rueda_viaje"=>$idViaje,
                     "id_usuario"=>$usuario->id,
-                    "reglas"=>json_encode($reglas),
+                    "reglas"=>'{"irSolo":0,"plazas":4,"salida":'.$salida.'}'
                 ]);
             }
         }

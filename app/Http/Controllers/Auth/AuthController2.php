@@ -35,7 +35,7 @@ class AuthController2 extends Controller
         $code = substr(str_shuffle($permitted_chars), 0, 15);
         $user->remember_token = $code;
 
-        $url = $_SERVER['SERVER_NAME'] .  DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . "api" . DIRECTORY_SEPARATOR . "check" . DIRECTORY_SEPARATOR . $code;
+        $url = $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT']!=80?$_SERVER['SERVER_PORT']:'') .  DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . "api" . DIRECTORY_SEPARATOR . "check" . DIRECTORY_SEPARATOR . $code;
 
 
         Mail::to($user->email)->send(new Verificar($user->name, $user->surname, $url));

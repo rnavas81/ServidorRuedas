@@ -19,6 +19,6 @@ class Rueda_viajes_usuario extends Model
         'updated_at'
     ];
     public function usuario(){
-        return $this->hasOne('App\Models\User','id','id_usuario');
+        return $this->hasOne('App\Models\User','id','id_usuario')->whereStatus( 1);
     }
 }
