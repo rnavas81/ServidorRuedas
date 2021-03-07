@@ -5,20 +5,25 @@
         <group>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/app/Http/Controllers/Api/Ruedas.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/config/filesystems.php</file>
+            <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/database/seeders/ruedas.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/routes/api.php</file>
-            <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/app/Providers/DropboxServiceProvider.php</file>
+            <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/database/seeders/ruedas_viajes.php</file>
+            <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/database/seeders/ruedas_viajes_users.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/config/auth.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/database/migrations/2014_10_12_000000_create_users_table.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/config/app.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/.env</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/app/Models/User.php</file>
+            <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/database/seeders/users.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/app/Http/Controllers/Auth/AuthController2.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/app/Http/Controllers/Api/Usuarios.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/app/Models/AsignacionRol.php</file>
+            <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/database/seeders/ruedas_generadas.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/app/Http/Middleware/Authenticate.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/resources/views/check.blade.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/composer.json</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/app/Mail/RecuperarContraseña.php</file>
+            <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/database/seeders/DatabaseSeeder.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/app/Mail/Verificar.php</file>
             <file>file:/Users/iamunder/Desktop/Coworking/Servidor/html/app/Providers/AuthServiceProvider.php</file>
         </group>
