@@ -154,6 +154,8 @@ class Usuarios extends Controller {
         $user->status = 0;
         $user->save();
         
+        app('App\Http\Controllers\Api\Ruedas')->generateRueda($request->rueda);
+        
         return response()->json([
             'borrado' => ('OK')
         ], 200);
