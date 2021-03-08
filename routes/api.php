@@ -86,9 +86,7 @@ Route::group([], function () {
         Route::post('/usuario/deleteAccount', [App\Http\Controllers\Api\Usuarios::class, 'delete']);
         //  Para comprobar el estado del usuario
         Route::post('/usuario/estado',[App\Http\Controllers\Api\Usuarios::class,'comprobarEstado']);
-        //  Para modificar sus valores
-        Route::post('/usuario/modify',[App\Http\Controllers\Api\Usuarios::class,'modify']);
-
+        
         // Para comprobar que el usuario esta logeado
         Route::post('/usuario/test',function (Request $params){
             return response()->json([
