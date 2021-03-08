@@ -89,9 +89,10 @@ Route::group([], function () {
         
         // Para comprobar que el usuario esta logeado
         Route::post('/usuario/test',function (Request $params){
-            return response()->json([
-                    'message' => 'Ok'
-                        ], 200);
+            return true;
+//            return response()->json([
+//                    'message' => 'Ok'
+//                        ], 200);
         });
 
         // Para comprobar el rol del usuario

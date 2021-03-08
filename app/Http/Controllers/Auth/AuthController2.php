@@ -61,7 +61,6 @@ class AuthController2 extends Controller
         if ($user != null) {
             $user->email_verified_at = time();
             $user->remember_token = null;
-            $user->status = "1";
             $user->save();
             return redirect(env("APP_ROUTE"));
         }
@@ -111,7 +110,7 @@ class AuthController2 extends Controller
             return response()->json(['message' => 'Login incorrecto. Revise las credenciales.'], 400);
         }
         $user = auth()->user();
-        if ($user->status != 1) {
+        if ($user->email_verified_at == null) {
             return response()->json(['message' => 'Correo sin verificar'], 400);
         }
         $accessToken = auth()->user()->createToken('authToken')->accessToken;
