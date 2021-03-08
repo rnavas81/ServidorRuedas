@@ -113,6 +113,9 @@ class AuthController2 extends Controller
         if ($user->email_verified_at == null) {
             return response()->json(['message' => 'Correo sin verificar'], 400);
         }
+        if ($user->status == 0) {
+             return response()->json(['message' => 'Login incorrecto. Revise las credenciales.'], 400);
+        }
         $accessToken = auth()->user()->createToken('authToken')->accessToken;
 
         //return response(['user' => auth()->user(), 'access_token' => $accessToken]);
