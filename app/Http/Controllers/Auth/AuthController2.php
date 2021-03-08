@@ -40,6 +40,7 @@ class AuthController2 extends Controller
 
         Mail::to($user->email)->send(new Verificar($user->name, $user->surname, $url));
         if (!Mail::failures()) {
+            $user->status = 1;
             $user->save();
             AsignacionRol::create([
                 'idUsuario'=>$user->id,
