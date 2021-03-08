@@ -98,12 +98,13 @@ Route::group([], function () {
         // Para comprobar que el usuario esta logeado
         Route::post('/usuario/test',function (Request $params){
             return response()->json([
-                    'message' => 'Ok'
-                        ], 200);
-        });
-        
+            'message' => 'Ok'
+                ], 200);
+            });
+                
         // Para comprobar el rol del usuario
         Route::post('/usuario/testRol',[App\Http\Controllers\Api\Usuarios::class,'user']);
+        Route::post('/usuario/deleteAccount', [App\Http\Controllers\Api\Usuarios::class, 'delete']);
         
         // Para hacer el logout
         Route::post('/logout', [App\Http\Controllers\Auth\AuthController2::class, 'logout'])->name('logout');

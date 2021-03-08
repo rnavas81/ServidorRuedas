@@ -101,7 +101,8 @@ class Usuarios extends Controller {
     }
 
     public function getUsers() {
-        $usuarios = User::where("status",1)->get();
+        $usuarios = User::where("status",1)
+                        ->get();
         return response()->json([
                     'listaUsuarios' => ($usuarios)
                         ], 200);
@@ -135,18 +136,36 @@ class Usuarios extends Controller {
     }
 
     public function deleteUser(Request $request) {
-        DB::table('users')
-                ->where('id', $request->id)
-                ->update(['status' => 0]);
-
-        app('App\Http\Controllers\Api\Ruedas')->generateRueda($request->rueda);
+        if($request->user()->id != $request->id){
+           $this->delete($request);
+        }else{
+            return response()->json(null, 405);
+        }
+        
         // DB::table('asignacion_rols')
         //         ->where('idUsuario', $request->id)
         //         ->delete();
 
-        return response()->json([
+        
+    }
+
+    public function delete(Request $request) {
+            DB::table('users')
+                ->where('id', $request->id)
+                ->update(['status' => 0]);
+
+            app('App\Http\Controllers\Api\Ruedas')->generateRueda($request->rueda);
+            
+            return response()->json([
                     'borrado' => ('OK')
                         ], 200);
+        
+        
+        // DB::table('asignacion_rols')
+        //         ->where('idUsuario', $request->id)
+        //         ->delete();
+
+        
     }
 
 
