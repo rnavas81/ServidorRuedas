@@ -5,20 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RuedaGenerada extends Model
+class Rueda_salidas extends Model
 {
     use HasFactory;
-    protected $table = 'ruedas_generadas';
-
+    public $timestamps = false;
+    protected $table = 'ruedas_salidas';
     protected $fillable = [
         'id_rueda',
-        'dia',
-        'hora',
-        'tipo',
-        'coches',
+        'nombre'
     ];
     protected $hidden = [
-        'created_at',
-        'updated_at'
     ];
+    public function rueda(){
+        return $this->hasOne('App\Models\Rueda','id','id_rueda');
+    }
 }

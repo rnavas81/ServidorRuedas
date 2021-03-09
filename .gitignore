@@ -10,6 +10,7 @@ app/storage/
 public/storage
 public/hot
 storage/*.key
+storage/oauth-*
 .env.*.php
 .env.php
 .env
@@ -49,4 +50,3 @@ fabric.properties
 # modules.xml
 # .idea/misc.xml
 # *.ipr
-/nbproject/private/
