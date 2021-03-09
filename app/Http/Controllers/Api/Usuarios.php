@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\AsignacionRol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
 // use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class Usuarios extends Controller {
@@ -30,22 +32,24 @@ class Usuarios extends Controller {
         $idRueda = $params->get("idRueda");
         $horario = $params->get("horario");
         // Borra los posibles viajes del usuario para esa rueda
-        \DB::select("DELETE FROM ruedas_viajes_users WHERE id_usuario='" . $idUsuario . "' AND id_rueda_viaje IN (SELECT id FROM ruedas_viajes WHERE ruedas_viajes.id_rueda='" . $idRueda . "')");
+        \DB::select("DELETE FROM ruedas_viajes_users WHERE id_usuario='" . $idUsuario . "';");
         // Agrega los viajes
         foreach ($horario as $item) {
-            foreach ($item as $id) {
+            foreach ($item as $viaje){
                 Rueda_viajes_usuario::create([
-                    'id_rueda_viaje' => $id,
-                    'id_usuario' => $idUsuario,
-                    'reglas' => "",
+                    'id_rueda_viaje'=>$viaje['id'],
+                    'id_usuario'=>$idUsuario,
+                    'reglas'=>json_encode($viaje["reglas"]),
                 ]);
             }
         }
+        User::where("id",$idUsuario)->update(["rueda"=>$idRueda]);
 
         app('App\Http\Controllers\Api\Ruedas')->generateRueda($idRueda);
 
         return response()->json([
                     'message' => 'Ok',
+                    'data'=>User::where("id",$idUsuario)->first(),
                         ], 201);
     }
 
@@ -65,10 +69,11 @@ class Usuarios extends Controller {
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
+        $user->status = 1;
         if ($user->save()) {
             $response = response()->json([
                 'message' => 'Creacion satisfactoria',
-                'code' => '200'
+                'code' => '201'
                     ], 200);
         } else {
             $response = response()->json([
@@ -96,18 +101,8 @@ class Usuarios extends Controller {
     }
 
     public function getUsers() {
-        // $usuarios = DB::table('users')
-        //         ->join('asignacion_rols', 'users.id', '=', 'asignacion_rols.idUsuario')
-        //         ->select(
-        //                 'users.id',
-        //                 'users.name',
-        //                 'users.surname',
-        //                 'users.email',
-        //                 'asignacion_rols.rol',
-        //         )
-        //         ->get();
-        $usuarios = User::where("status",1)->get();
-
+        $usuarios = User::where("status",1)
+                        ->get();
         return response()->json([
                     'listaUsuarios' => ($usuarios)
                         ], 200);
@@ -141,94 +136,43 @@ class Usuarios extends Controller {
     }
 
     public function deleteUser(Request $request) {
-        DB::table('users')
-                ->where('id', $request->id)
-                ->delete();
-
-        DB::table('asignacion_rols')
-                ->where('idUsuario', $request->id)
-                ->delete();
-
-        return response()->json([
-                    'borrado' => ('OK')
-                        ], 200);
-    }
-
-
-    public function edit(Request $request) {
-        if ($request->password == null) {
-            $request->validate([
-                'name' => 'required|string',
-                'surname' => 'required|string',
-                'email' => 'required|string'
+        if($request->user()->id != $request->id){
+            $user = User::where("id",$request->id)->update([
+                "status"=>0
             ]);
-            $user = User::find($request->id);
-            $user->name = $request->name;
-            $user->surname = $request->surname;
-            $user->email = $request->email;
-        } else {
-            $request->validate([
-                'name' => 'required|string',
-                'surname' => 'required|string',
-                'email' => 'required|string',
-                'password' => 'required_with:password2|same:password2',
-                'password2' => 'required'
-            ]);
-            if (isset($errors) && $errors->any()) {
-                return "contiene errores";
-            }
-            $user = User::find($request->id);
-            $user->name = $request->name;
-            $user->surname = $request->surname;
-            $user->email = $request->email;
-            $user->password = bcrypt($request->password);
+
+            app('App\Http\Controllers\Api\Ruedas')->generateRueda($request->rueda);
+
+            return response()->json([
+                'borrado' => ('OK')
+            ], 200);
+        }else{
+            return response()->json(null, 405);
         }
-        $user->save();
-        return response()->json([
-                    'mensaje' => 'Modificación exitosa',
-                    'status' => 200
-                        ], 200);
+
+        // DB::table('asignacion_rols')
+        //         ->where('idUsuario', $request->id)
+        //         ->delete();
+
+
     }
 
-//    public function upImg(Request $request) {
-//        if ($request->hasFile('image')) {
-////            $file = $request->file('image');
-////            $filename = $request->id;
-////            $extension = $file->getClientOriginalExtension();
-////            $picture = $filename . '.' . $extension;
-////            //move image to public/img folder
-////            $file->move(public_path('img'), $picture);
-//
-//
-//            $image = $request->file('image'); //image file from frontend
-//            $name = date('Ymd');
-//            $firebase_storage_path = '';
-//            $localfolder = public_path('firebase-temp-uploads') . '/';
-//            $extension = $image->getClientOriginalExtension();
-//            $file = $name . '.' . $extension;
-//            if ($image->move($localfolder, $file)) {
-//                $uploadedfile = fopen($localfolder . $file, 'r');
-//                //Linea importante el resto esta de relleno y testing
-//                app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file,"metadata" => [  "contentType"=> 'image/png']]);
-//                //will remove from local laravel folder
-//                unlink($localfolder . $file);
-//                $url = "https://firebasestorage.googleapis.com/v0/b/carshare-vdg.appspot.com/o/".$file."?alt=media";
-//
-//                // Actualizamos la url para el usuario
-//                $user = User::find($request->id);
-//                $user->avatar = $url;
-//                $user->save();
-//
-//                return response()->json(["message" => "Image Uploaded Succesfully"],200);
-//            } else {
-//               return response()->json(["message" => "Sigue sin ir"],400);
-//            }
-//        } else {
-//            return response()->json(["message" => "Select image first."],200);
-//        }
-//    }
+    // Funcion para dar de baja la cuenta
+    public function delete(Request $request){
+        $user = $request->user();
+        $user->status = 0;
+        $user->save();
 
+        app('App\Http\Controllers\Api\Ruedas')->generateRueda($request->rueda);
+
+        return response()->json([
+            'borrado' => ('OK')
+        ], 200);
+    }
+
+    // Funcion para editar el perfil
     public function modify(Request $request) {
+
         if ($user = User::find($request->id)) {
             //Modificamos sus campos normales
             if ($request->password == null) {
@@ -257,34 +201,42 @@ class Usuarios extends Controller {
                 $user->password = bcrypt($request->password);
             }
 
-            //Modificamos su icono
-//            if ($request->hasFile('image')) {
-//                $image = $request->file('image'); //image file from frontend
-//                $name = date('Ymd');
-//                $firebase_storage_path = '';
-//                $localfolder = public_path('firebase-temp-uploads') . '/';
-//                $extension = $image->getClientOriginalExtension();
-//                $file = $name . '.' . $extension;
-//                if ($image->move($localfolder, $file)) {
-//                    $uploadedfile = fopen($localfolder . $file, 'r');
-//                    //Linea importante el resto esta de relleno y testing
-//                    app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file,"metadata" => [  "contentType"=> 'image/png']]);
-//                    //will remove from local laravel folder
-//                    unlink($localfolder . $file);
-//                    $url = "https://firebasestorage.googleapis.com/v0/b/carshare-vdg.appspot.com/o/".$file."?alt=media";
-//
-//                    // Actualizamos la url para el usuario
-//                    $user->avatar = $url;
-//                }
-//            }else{
-//                $url = $user->avatar;
-//            }
-            $url = $user->avatar;
+            // Codigo subir imagen dropbox
+            if ($request->hasFile('image')) {
+
+                $dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();
+
+                $oldName = $user->file;
+                if ($user->file != '' ) {
+                    $dropbox->delete($user->file);
+                }
+
+                $name = Crypt::encrypt($user->id);
+                $name = substr($name, 9, 12);
+                $name = $name .'.'. $request->file('image')->getClientOriginalExtension();
+
+                Storage::disk('dropbox')->putFileAs(
+                        '/',
+                        $request->file('image'),
+                        $name
+                );
+
+                $response = $dropbox->createSharedLinkWithSettings(
+                        $name,
+                        ["requested_visibility" => "public"]
+                );
+                $url = str_replace('dl=0', 'raw=1', $response['url']);
+                $user->avatar = $url;
+                $user->file = $name;
+            }else{
+                $url = $user->avatar;
+            }
+
             $user->save();
             return response()->json([
                     'mensaje' => 'Modificación exitosa',
                     'status' => 200,
-                    'url' => $url
+                    'avatar' => $url
                         ], 200);
         }else{
             return response()->json([
@@ -292,6 +244,18 @@ class Usuarios extends Controller {
                     'status' => 400
                         ], 400);
         }
+    }
+
+    // Funcion para obtemer el rol del usuario
+    public function user(Request $request)
+    {
+        $user = $request->user();
+        $rol = AsignacionRol::with("roles","users")
+            ->where('idUsuario',$user->id)
+            ->first();
+        return response()->json([
+            'rol' => $rol->roles->id,
+        ], 200);
     }
 
 }

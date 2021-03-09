@@ -19,6 +19,9 @@ class Rueda extends Model
         'created_at',
         'updated_at'
     ];
+    public function salidas(){
+        return $this->hasMany('App\Models\Rueda_salidas','id_rueda','id');
+    }
     public function viajes(){
         return $this->hasMany('App\Models\Rueda_viaje','id_rueda','id');
     }

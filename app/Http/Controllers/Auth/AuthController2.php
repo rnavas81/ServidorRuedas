@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class AuthController2 extends Controller
 {
+    // Funcion limpia de registro
     public function signup(Request $request)
     {
         $request->validate([
@@ -31,15 +32,15 @@ class AuthController2 extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $code = substr(str_shuffle($permitted_chars), 0, 15);
+        $code = $this->generarAlfanumerico(0, 15);
         $user->remember_token = $code;
 
-        $url = $_SERVER['SERVER_NAME'] .  DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . "api" . DIRECTORY_SEPARATOR . "check" . DIRECTORY_SEPARATOR . $code;
+        $url = $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT']!=80?$_SERVER['SERVER_PORT']:'') .  DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . "api" . DIRECTORY_SEPARATOR . "check" . DIRECTORY_SEPARATOR . $code;
 
 
         Mail::to($user->email)->send(new Verificar($user->name, $user->surname, $url));
         if (!Mail::failures()) {
+            $user->status = 1;
             $user->save();
             AsignacionRol::create([
                 'idUsuario'=>$user->id,
@@ -56,50 +57,32 @@ class AuthController2 extends Controller
         }
     }
 
+    // Funcion de validar email
     public function check($clave) {
         $user = User::where('remember_token',$clave)->first();
         if ($user != null) {
             $user->email_verified_at = time();
             $user->remember_token = null;
-            $user->status = "1";
             $user->save();
             return redirect(env("APP_ROUTE"));
         }
 
     }
-
-    public function login2(Request $request)
-    {
-        $request->validate([
-            'email'       => 'required|string|email',
-            'password'    => 'required|string',
-            'remember_me' => 'boolean',
-        ]);
-        $credentials = request(['email', 'password']);
-        if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'Unauthorized'], 401);
-        }
-        $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
-        if ($request->remember_me) {
-            $token->expires_at = Carbon::now()->addWeeks(1);
-        }
-        $token->save();
-        return response()->json([
-            'access_token' => $tokenResult->accessToken,
-            'token_type'   => 'Bearer',
-            'expires_at'   => Carbon::parse(
-                $tokenResult->token->expires_at)
-                    ->toDateTimeString(),
-        ]);
+    
+    // Funcion reutilizada para generar un alfanumerico
+    public function generarAlfanumerico($val1, $val2){
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $string = substr(str_shuffle($permitted_chars), $val1, $val2);
+        
+        return $string;
     }
 
+    // Funcion que devuelve el rol de usuario
     public function prueba(Request $request){
         $rol = AsignacionRol::with(["roles","users"])->first();
     }
 
+    // Funcion de login
     public function login(Request $request){
         $loginData = $request->validate([
             'email' => 'email|required',
@@ -111,13 +94,14 @@ class AuthController2 extends Controller
             return response()->json(['message' => 'Login incorrecto. Revise las credenciales.'], 400);
         }
         $user = auth()->user();
-        if ($user->status != 1) {
+        if ($user->email_verified_at == null) {
             return response()->json(['message' => 'Correo sin verificar'], 400);
+        }
+        if ($user->status == 0) {
+             return response()->json(['message' => 'Login incorrecto. Revise las credenciales.'], 400);
         }
         $accessToken = auth()->user()->createToken('authToken')->accessToken;
 
-        //return response(['user' => auth()->user(), 'access_token' => $accessToken]);
-//        return response()->json(['message' => ['user' => auth()->user(), 'access_token' => $accessToken], 'code' => 200], 200);
 
         $rol = AsignacionRol::with("roles","users")
             ->where('idUsuario',$user->id)
@@ -132,10 +116,13 @@ class AuthController2 extends Controller
             'access_token' => $accessToken,
             'avatar' => $user->avatar,
             'rol' => $rol->roles->id,
+            'rueda' => $user->rueda,
         ];
+        
         return response()->json($return, 200);
     }
 
+    // Funcion para recuperar la contraseña
     public function forget(Request $request) {
         $data = $request->validate([
             'email' => 'email|required'
@@ -144,8 +131,8 @@ class AuthController2 extends Controller
 
         $user = User::where('email',$data['email'])->first();
         if ($user != null) {
-            $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $pass = substr(str_shuffle($permitted_chars), 0, 10);
+            
+            $pass = $this->generarAlfanumerico(0, 10);
             $user->password = bcrypt($pass);
             $user->save();
 
@@ -167,4 +154,12 @@ class AuthController2 extends Controller
         }
     }
 
+    // Funcion para realizar el cerrar sesion
+    public function logout(Request $request){
+        $request->user()->token()->revoke();
+
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ],200);
+    }
 }
