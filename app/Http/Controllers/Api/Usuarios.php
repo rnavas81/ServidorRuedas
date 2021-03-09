@@ -73,7 +73,7 @@ class Usuarios extends Controller {
         if ($user->save()) {
             $response = response()->json([
                 'message' => 'Creacion satisfactoria',
-                'code' => '200'
+                'code' => '201'
                     ], 200);
         } else {
             $response = response()->json([
