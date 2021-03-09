@@ -97,6 +97,7 @@ Route::group([], function () {
 
         // Para comprobar el rol del usuario
         Route::post('/usuario/testRol',[App\Http\Controllers\Api\Usuarios::class,'user']);
+        // Para darse de baja
         Route::post('/usuario/deleteAccount', [App\Http\Controllers\Api\Usuarios::class, 'delete']);
         
         // Para hacer el logout

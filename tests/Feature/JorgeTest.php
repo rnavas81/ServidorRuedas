@@ -23,17 +23,17 @@ class JorgeTest extends TestCase
     }
     
     public function test_crearUsuario(){
-//        $user = new User;
-//        $user->name = 'User';
-//        $user->surname = 'surname';
-//        $user->email = 'mail@nomail.com';
-//        $user->password = bcrypt('123456');
-//        $user->save();
-//        
-//        $this->assertEquals('User', $user->name);
-//        $this->assertEquals('surname', $user->surname);
-//        $this->assertEquals('mail@nomail.com', $user->email);
-//        $this->assertEquals(0, $user->status);
+        $user = new User;
+        $user->name = 'User';
+        $user->surname = 'surname';
+        $user->email = 'mail@nomail.com';
+        $user->password = bcrypt('123456');
+        $user->save();
+        
+        $this->assertEquals('User', $user->name);
+        $this->assertEquals('surname', $user->surname);
+        $this->assertEquals('mail@nomail.com', $user->email);
+        $this->assertEquals(0, $user->status);
     }
     
     public function test_login() {

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class AuthController2 extends Controller
 {
+    // Funcion limpia de registro
     public function signup(Request $request)
     {
         $request->validate([
@@ -56,6 +57,7 @@ class AuthController2 extends Controller
         }
     }
 
+    // Funcion de validar email
     public function check($clave) {
         $user = User::where('remember_token',$clave)->first();
         if ($user != null) {
@@ -67,6 +69,7 @@ class AuthController2 extends Controller
 
     }
     
+    // Funcion reutilizada para generar un alfanumerico
     public function generarAlfanumerico($val1, $val2){
         $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $string = substr(str_shuffle($permitted_chars), $val1, $val2);
@@ -74,10 +77,12 @@ class AuthController2 extends Controller
         return $string;
     }
 
+    // Funcion que devuelve el rol de usuario
     public function prueba(Request $request){
         $rol = AsignacionRol::with(["roles","users"])->first();
     }
 
+    // Funcion de login
     public function login(Request $request){
         $loginData = $request->validate([
             'email' => 'email|required',
@@ -97,8 +102,6 @@ class AuthController2 extends Controller
         }
         $accessToken = auth()->user()->createToken('authToken')->accessToken;
 
-        //return response(['user' => auth()->user(), 'access_token' => $accessToken]);
-//        return response()->json(['message' => ['user' => auth()->user(), 'access_token' => $accessToken], 'code' => 200], 200);
 
         $rol = AsignacionRol::with("roles","users")
             ->where('idUsuario',$user->id)
@@ -115,9 +118,11 @@ class AuthController2 extends Controller
             'rol' => $rol->roles->id,
             'rueda' => $user->rueda,
         ];
+        
         return response()->json($return, 200);
     }
 
+    // Funcion para recuperar la contraseña
     public function forget(Request $request) {
         $data = $request->validate([
             'email' => 'email|required'
@@ -149,6 +154,7 @@ class AuthController2 extends Controller
         }
     }
 
+    // Funcion para realizar el cerrar sesion
     public function logout(Request $request){
         $request->user()->token()->revoke();
 
