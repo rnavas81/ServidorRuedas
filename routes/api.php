@@ -62,7 +62,6 @@ Route::post('/signup', [App\Http\Controllers\Auth\AuthController2::class, 'signu
 Route::post('/login', [App\Http\Controllers\Auth\AuthController2::class, 'login'])->name('login');
 Route::post('/forget', [App\Http\Controllers\Auth\AuthController2::class, 'forget'])->name('forget');
 
-
 // Rutas utilizando passport
 Route::group([], function () {
 //    Route::post('login', 'AuthController@login');
@@ -86,7 +85,7 @@ Route::group([], function () {
         Route::post('/usuario/deleteAccount', [App\Http\Controllers\Api\Usuarios::class, 'delete']);
         //  Para comprobar el estado del usuario
         Route::post('/usuario/estado',[App\Http\Controllers\Api\Usuarios::class,'comprobarEstado']);
-        
+
         // Para comprobar que el usuario esta logeado
         Route::post('/usuario/test',function (Request $params){
             return true;
@@ -99,7 +98,7 @@ Route::group([], function () {
         Route::post('/usuario/testRol',[App\Http\Controllers\Api\Usuarios::class,'user']);
         // Para darse de baja
         Route::post('/usuario/deleteAccount', [App\Http\Controllers\Api\Usuarios::class, 'delete']);
-        
+
         // Para hacer el logout
         Route::post('/logout', [App\Http\Controllers\Auth\AuthController2::class, 'logout'])->name('logout');
 

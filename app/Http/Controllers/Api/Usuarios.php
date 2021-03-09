@@ -137,26 +137,34 @@ class Usuarios extends Controller {
 
     public function deleteUser(Request $request) {
         if($request->user()->id != $request->id){
-           $this->delete($request);
+            $user = User::where("id",$request->id)->update([
+                "status"=>0
+            ]);
+
+            app('App\Http\Controllers\Api\Ruedas')->generateRueda($request->rueda);
+
+            return response()->json([
+                'borrado' => ('OK')
+            ], 200);
         }else{
             return response()->json(null, 405);
         }
-        
+
         // DB::table('asignacion_rols')
         //         ->where('idUsuario', $request->id)
         //         ->delete();
 
-        
+
     }
-    
+
     // Funcion para dar de baja la cuenta
     public function delete(Request $request){
         $user = $request->user();
         $user->status = 0;
         $user->save();
-        
+
         app('App\Http\Controllers\Api\Ruedas')->generateRueda($request->rueda);
-        
+
         return response()->json([
             'borrado' => ('OK')
         ], 200);
@@ -164,7 +172,7 @@ class Usuarios extends Controller {
 
     // Funcion para editar el perfil
     public function modify(Request $request) {
-        
+
         if ($user = User::find($request->id)) {
             //Modificamos sus campos normales
             if ($request->password == null) {
@@ -192,21 +200,21 @@ class Usuarios extends Controller {
                 $user->email = $request->email;
                 $user->password = bcrypt($request->password);
             }
-            
+
             // Codigo subir imagen dropbox
             if ($request->hasFile('image')) {
-                
+
                 $dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();
-                
+
                 $oldName = $user->file;
                 if ($user->file != '' ) {
                     $dropbox->delete($user->file);
                 }
-                
+
                 $name = Crypt::encrypt($user->id);
                 $name = substr($name, 9, 12);
-                $name = $name .'.'. $request->file('image')->getClientOriginalExtension();  
-                
+                $name = $name .'.'. $request->file('image')->getClientOriginalExtension();
+
                 Storage::disk('dropbox')->putFileAs(
                         '/',
                         $request->file('image'),
@@ -223,7 +231,7 @@ class Usuarios extends Controller {
             }else{
                 $url = $user->avatar;
             }
-            
+
             $user->save();
             return response()->json([
                     'mensaje' => 'Modificación exitosa',
@@ -237,7 +245,7 @@ class Usuarios extends Controller {
                         ], 400);
         }
     }
-    
+
     // Funcion para obtemer el rol del usuario
     public function user(Request $request)
     {
