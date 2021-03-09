@@ -31,8 +31,7 @@ class AuthController2 extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $code = substr(str_shuffle($permitted_chars), 0, 15);
+        $code = $this->generarAlfanumerico(0, 15);
         $user->remember_token = $code;
 
         $url = $_SERVER['SERVER_NAME'] . ($_SERVER['SERVER_PORT']!=80?$_SERVER['SERVER_PORT']:'') .  DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . "api" . DIRECTORY_SEPARATOR . "check" . DIRECTORY_SEPARATOR . $code;
@@ -67,33 +66,12 @@ class AuthController2 extends Controller
         }
 
     }
-
-    public function login2(Request $request)
-    {
-        $request->validate([
-            'email'       => 'required|string|email',
-            'password'    => 'required|string',
-            'remember_me' => 'boolean',
-        ]);
-        $credentials = request(['email', 'password']);
-        if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'Unauthorized'], 401);
-        }
-        $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
-        if ($request->remember_me) {
-            $token->expires_at = Carbon::now()->addWeeks(1);
-        }
-        $token->save();
-        return response()->json([
-            'access_token' => $tokenResult->accessToken,
-            'token_type'   => 'Bearer',
-            'expires_at'   => Carbon::parse(
-                $tokenResult->token->expires_at)
-                    ->toDateTimeString(),
-        ]);
+    
+    public function generarAlfanumerico($val1, $val2){
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $string = substr(str_shuffle($permitted_chars), $val1, $val2);
+        
+        return $string;
     }
 
     public function prueba(Request $request){
@@ -148,8 +126,8 @@ class AuthController2 extends Controller
 
         $user = User::where('email',$data['email'])->first();
         if ($user != null) {
-            $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $pass = substr(str_shuffle($permitted_chars), 0, 10);
+            
+            $pass = $this->generarAlfanumerico(0, 10);
             $user->password = bcrypt($pass);
             $user->save();
 
